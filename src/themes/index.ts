@@ -1,3 +1,3 @@
-export * from './theme';
-export * from './box';
-export * from './text';
+export * from './Theme';
+export * from './Box';
+export * from './Text';
