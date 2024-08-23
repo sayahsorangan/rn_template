@@ -1,0 +1,50 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'macos-latest'
+
+name: $(date:yyyy).$(Month)$(rev:.r)
+
+variables:
+- group: AndroidApp
+  #AzureSubscription: "S2T Sela-consumer-mobile-app" # Change this according to the naming convention S2T Sela-<Project Name> (refer to similar app)
+  #KeyVaultName: "predicintel-devops-kv"
+  #GooglePlayConsole: "Google Play Theratech-consumer-mobile-app" #Change this 
+
+resources:
+  repositories:
+  - repository: template
+    type: git
+    name: Cybersmart-Next/template
+
+stages:
+  - template: .azuredevops/preparation-stage.yml@template
+  - template: android/android-build.yaml@template
+    parameters:          
+      taskName:
+        - 'app:assembleRelease'
+        - 'app:bundleRelease'
+      keystoreFile: 'theratech-upload.keystore'  
+  - template: android/android-release.yaml@template
+    parameters:
+      dependsOn:
+      - Build
+      - PreBuild
+      ReleaseEnvironmentName: DEV
+      applicationId: ai.theratech.clinics
+  # Activate full CI/CD only after Google Review, otherwise Google Play will block
+  # #############
+  #     trackStatusUpdate:
+  #       - track: internal
+  #         status: completed
+  # - template: 'android-release.yaml'
+  #   parameters:
+  #     dependsOn:
+  #     - DEV
+  #     - PreBuild
+  #     ReleaseEnvironmentName: UAT
+  #     applicationId: theratech.testapp   
+  #     promoteTrack: 
+  #       sourceTrack: internal
+  #       destinationTrack: open
