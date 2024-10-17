@@ -40,13 +40,13 @@ export const IconButton = React.memo((props: IconButtonProps): JSX.Element => {
 
   return (
     <TouchableOpacity
-      disabled={disabled}
+      disabled={disabled || loading}
       onPress={onPress}
       style={[
         {
           borderRadius: spacing.xl,
           backgroundColor: colors.white,
-          padding: spacing.s,
+          padding: spacing.xs,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: loading ? 'center' : undefined,
@@ -64,18 +64,19 @@ export const IconButton = React.memo((props: IconButtonProps): JSX.Element => {
               <Icons.Feather name={icon_name} color={icon_color} size={icon_size} />
             </TouchableOpacity>
           ) : (
-            center && <Box style={{width: icon_size + spacing.s}} />
+            center && <Box style={{width: icon_size + spacing.xs}} />
           )}
           {!!label && (
             <Text
               style={[
                 {
-                  ...textVariants.body_2_semibold,
-                  marginLeft: left_icon ? spacing.s : 0,
-                  marginRight: left_icon ? 0 : spacing.s,
+                  ...textVariants.button_m_medium,
+                  marginLeft: left_icon ? spacing.xs : 0,
+                  marginRight: left_icon ? 0 : spacing.xs,
                 },
                 LabelStyle,
               ]}
+              numberOfLines={1}
             >
               {label}
             </Text>
@@ -85,7 +86,7 @@ export const IconButton = React.memo((props: IconButtonProps): JSX.Element => {
               <Icons.Feather name={icon_name} color={icon_color} size={icon_size} />
             </TouchableOpacity>
           ) : (
-            center && <Box style={{width: icon_size + spacing.s}} />
+            center && <Box style={{width: icon_size + spacing.xs}} />
           )}
         </>
       )}

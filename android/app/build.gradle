@@ -53,7 +53,9 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+// Changes for CI/CD
+def enableProguardInReleaseBuilds = true
+// End Changes for CI/CD
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -78,8 +80,10 @@ android {
         applicationId "template.s2t.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // Changes for CI/CD
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        // End Changes for CI/CD
     }
     signingConfigs {
         debug {
@@ -87,6 +91,7 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+            
         }
     }
     buildTypes {
@@ -94,11 +99,40 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+             // Changes for CI/CD
+
+            // Remove signing config release for CI/CD injection
+            //signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            shrinkResources enableProguardInReleaseBuilds
+            ndk {
+                debugSymbolLevel 'FULL'
+            }     
+            // End Changes for CI/CD 
+        }
+         // Changes for CI/CD
+        applicationVariants.all { variant ->
+            variant.outputs.all { output -> 
+                def packageName = variant.applicationId
+                def versionName = variant.versionName
+                def versionCode = variant.versionCode.toString()
+
+                def abiName = "universal"
+                output.getFilters().each { filter ->
+                    if (filter.filterType == "ABI") {
+                        abiName = filter.identifier
+                    }
+                }
+
+                def newName 
+                if (output.outputFile.name.endsWith('.aab')) {
+                newName = "${packageName}-${versionName}-${versionCode}-${abiName}.aab"
+                } else {
+                newName = "${packageName}-${versionName}-${versionCode}-${abiName}.apk"
+                }
+                output.outputFileName = newName
+            }
         }
     }
 }

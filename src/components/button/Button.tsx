@@ -36,8 +36,8 @@ export const Button = React.memo((props: ButtonProps): JSX.Element => {
       onPress={onPress}
       style={[
         {
-          backgroundColor: disabled ? colors.grey_lighter : secondary ? colors.white : colors.primary_dark,
-          borderRadius: borderRadii.s,
+          backgroundColor: disabled ? colors.grey : secondary ? colors.white : colors.primary_dark,
+          borderRadius: borderRadii.xs,
           height: 48,
           borderWidth: disabled ? 0 : 1,
           borderColor: colors.primary_dark,
@@ -58,8 +58,8 @@ export const Button = React.memo((props: ButtonProps): JSX.Element => {
           <Text
             style={[
               {
-                ...textVariants.body_1_bold,
-                color: disabled ? colors.grey : secondary ? colors.primary : colors.white,
+                ...textVariants.button_m_bold,
+                color: disabled ? colors.grey_light : secondary ? colors.primary : colors.white,
               },
               LabelStyle,
             ]}

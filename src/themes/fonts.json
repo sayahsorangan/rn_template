@@ -1,10 +1,14 @@
 [
   {
-    "font": "AvenirNextLTPro-Medium",
+    "name": "bold"
+  },
+  {
     "name": "medium"
   },
   {
-    "font": "AvenirNextLTPro-Medium",
     "name": "regular"
+  },
+  {
+    "name": "semibold"
   }
 ]
