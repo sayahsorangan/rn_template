@@ -1,14 +1,18 @@
 [
   {
-    "name": "bold"
+    "name": "bold",
+    "fontWeight": "800"
   },
   {
-    "name": "medium"
+    "name": "medium",
+    "fontWeight": "600"
   },
   {
-    "name": "regular"
+    "name": "regular",
+    "fontWeight": "500"
   },
   {
-    "name": "semibold"
+    "name": "semibold",
+    "fontWeight": "700"
   }
 ]

@@ -6,8 +6,9 @@ import {Icons} from '@app/assets/icons';
 import {Text, theme} from '@app/themes';
 import {STATUSBAR_HEIGHT} from '@components/container';
 import {store} from '@redux-store/store';
+import {MainHomeScreen} from '@screens/home/main-home';
+import {SettingsScreen} from '@screens/settings-screen';
 
-import {BottomTabScreen} from './bottom-navigation';
 import {Route, RouteStackNavigation} from './route-name';
 
 const Stack = createNativeStackNavigator<RouteStackNavigation>();
@@ -24,7 +25,8 @@ export const StackNavigator = () => {
       }}
       initialRouteName={is_login ? 'tab' : 'home'}
     >
-      <Stack.Screen name={Route.tab} component={BottomTabScreen} />
+      <Stack.Screen name={Route.home} component={MainHomeScreen} />
+      <Stack.Screen name={Route.settings} component={SettingsScreen} />
     </Stack.Navigator>
   );
 };

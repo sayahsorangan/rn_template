@@ -46,7 +46,7 @@ export const TextInput = React.memo((props: TextInputProps): JSX.Element => {
       {!!label && (
         <Text
           style={{
-            ...textVariants.body_helper_medium,
+            ...textVariants.body_medium,
             color: colors.black,
             marginBottom: spacing.xs,
           }}
@@ -60,6 +60,10 @@ export const TextInput = React.memo((props: TextInputProps): JSX.Element => {
             paddingHorizontal: spacing.xs,
             flexDirection: 'row',
             alignItems: 'center',
+            borderWidth: 1,
+            height: 48,
+            borderRadius: theme.borderRadii.xs,
+            borderColor: theme.colors.grey_light,
           },
           containerStyle,
         ]}

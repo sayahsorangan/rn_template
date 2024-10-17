@@ -9,9 +9,12 @@ import {Container} from '@components/container';
 
 const SplashScreen = () => {
   return (
-    <Container translucent whithImageBg={1} backgroundColor={theme.colors.white}>
+    <Container translucent backgroundColor={theme.colors.white}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Image source={Images.logo} style={{width: SCREEN_WIDTH / 2, height: SCREEN_WIDTH / 2}} />
+        <Image
+          source={Images.logo}
+          style={{width: SCREEN_WIDTH / 2, height: SCREEN_WIDTH / 2, borderRadius: theme.borderRadii.round}}
+        />
       </View>
     </Container>
   );
