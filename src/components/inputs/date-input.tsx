@@ -15,7 +15,7 @@ interface DateInputProps {
   value: Date;
 }
 
-export const DateInput = React.memo((props: DateInputProps): JSX.Element => {
+export const DateInput = React.memo((props: DateInputProps) => {
   const {colors, borderRadii, spacing, textVariants} = useTheme();
   const {type, onDateChange, label, value} = props;
 

@@ -5,7 +5,7 @@ import {Text, View} from 'react-native';
 import {Icons} from '@app/assets/icons';
 import {theme} from '@app/themes';
 
-export const EmptyData = React.memo(({text}: {text?: string}): JSX.Element => {
+export const EmptyData = React.memo(({text}: {text?: string}) => {
   return (
     <View style={{justifyContent: 'center', alignItems: 'center', marginVertical: theme.spacing.md, flex: 1}}>
       <Icons.Feather name="x-circle" color={theme.colors.grey} size={56} />

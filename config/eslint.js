@@ -33,6 +33,9 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/func-call-spacing': 'off',
+    '@typescript-eslint/no-empty-object-type': 'off',
+    '@typescript-eslint/no-require-imports': 'off',
     // react
     'react/destructuring-assignment': 0,
     'react/require-render-return': 2,

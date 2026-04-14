@@ -3,7 +3,6 @@ import {NavigatorScreenParams} from '@react-navigation/native';
 export const Route = {
   tab: 'tab',
   home: 'home',
-  settings: 'settings',
 } as const;
 
 export interface IBottomTabScreen {
@@ -16,5 +15,4 @@ export type StackScreens = {
 
 export type RouteStackNavigation = {
   [Route.tab]: NavigatorScreenParams<IBottomTabScreen>;
-  [Route.settings]: undefined;
 } & StackScreens;

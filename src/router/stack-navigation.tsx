@@ -7,7 +7,6 @@ import {Text, theme} from '@app/themes';
 import {STATUSBAR_HEIGHT} from '@components/container';
 import {store} from '@redux-store/store';
 import {MainHomeScreen} from '@screens/home/main-home';
-import {SettingsScreen} from '@screens/settings-screen';
 
 import {Route, RouteStackNavigation} from './route-name';
 
@@ -26,7 +25,6 @@ export const StackNavigator = () => {
       initialRouteName={is_login ? 'tab' : 'home'}
     >
       <Stack.Screen name={Route.home} component={MainHomeScreen} />
-      <Stack.Screen name={Route.settings} component={SettingsScreen} />
     </Stack.Navigator>
   );
 };

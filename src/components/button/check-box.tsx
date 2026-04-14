@@ -10,7 +10,7 @@ interface CheckBoxProps {
   value: boolean;
 }
 
-export const CheckBox = React.memo(({onPress, value}: CheckBoxProps): JSX.Element => {
+export const CheckBox = React.memo(({onPress, value}: CheckBoxProps) => {
   const {colors, spacing} = theme;
 
   return (

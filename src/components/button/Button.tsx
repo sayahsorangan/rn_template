@@ -16,7 +16,7 @@ interface ButtonProps {
   loading?: boolean;
 }
 
-export const Button = React.memo((props: ButtonProps): JSX.Element => {
+export const Button = React.memo((props: ButtonProps) => {
   const {colors, borderRadii, textVariants} = useTheme();
   const {
     onPress,

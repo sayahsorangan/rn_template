@@ -5,7 +5,7 @@ import {Image, Text, View} from 'react-native';
 import {Images} from '@app/assets/images';
 import {theme} from '@app/themes';
 
-export const UnderDev = React.memo((): JSX.Element => {
+export const UnderDev = React.memo(() => {
   return (
     <View style={{justifyContent: 'center', alignItems: 'center', marginVertical: theme.spacing.md, flex: 1}}>
       <Image source={Images.under_dev} style={{resizeMode: 'contain', height: '40%'}} />

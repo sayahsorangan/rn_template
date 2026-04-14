@@ -20,7 +20,7 @@ interface IconButtonProps extends ViewProps {
   loading?: boolean;
 }
 
-export const IconButton = React.memo((props: IconButtonProps): JSX.Element => {
+export const IconButton = React.memo((props: IconButtonProps) => {
   const {colors, spacing, textVariants} = theme;
   const {
     onPress,

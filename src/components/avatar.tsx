@@ -7,7 +7,7 @@ interface AvatarProps {
   size: number;
 }
 
-export const Avatar = React.memo((props: AvatarProps): JSX.Element => {
+export const Avatar = React.memo((props: AvatarProps) => {
   const {text, size = 48} = props;
 
   return (

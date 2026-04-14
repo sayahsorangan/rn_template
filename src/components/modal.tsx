@@ -20,7 +20,7 @@ export const Modal = ({
   onDissmiss,
   style,
   animationType = 'slide',
-}: ModalProps): JSX.Element => {
+}: ModalProps) => {
   return (
     <RNModal animationType={animationType} visible={show} transparent={true}>
       <View

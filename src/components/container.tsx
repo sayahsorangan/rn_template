@@ -28,7 +28,7 @@ interface ContainerProps extends OwnStatusBarProps {
   loading_text?: string;
 }
 
-export const Container = React.memo((props: ContainerProps): JSX.Element => {
+export const Container = React.memo((props: ContainerProps) => {
   const {colors} = theme;
   const {
     children,

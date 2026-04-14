@@ -1,22 +1,10 @@
 import React from 'react';
 
-import {NavigationContainer, Theme} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 
 import {linking} from './linking';
 import {navigationRef} from './navigation-helper';
 import {StackNavigator} from './stack-navigation';
-
-const theme: Theme = {
-  dark: false,
-  colors: {
-    background: '#FFFFFF',
-    border: '#FFFFFF',
-    card: '#FFFFFF',
-    notification: '#FFFFFF',
-    primary: '#FFFFFF',
-    text: '#1f1f1f',
-  },
-};
 
 export const MainNavigator = () => {
   const routeNameRef = React.useRef<string | undefined>('');
@@ -38,7 +26,6 @@ export const MainNavigator = () => {
       onStateChange={onStateChange}
       documentTitle={{enabled: true}}
       linking={linking}
-      theme={theme}
     >
       <StackNavigator />
     </NavigationContainer>

@@ -23,7 +23,7 @@ interface SearchInputProps extends TIP {
   iconRightName?: string;
 }
 
-export const SearchInput = React.memo((props: SearchInputProps): JSX.Element => {
+export const SearchInput = React.memo((props: SearchInputProps) => {
   const {colors, textVariants, spacing, borderRadii} = theme;
   const {
     TextInputStyle,

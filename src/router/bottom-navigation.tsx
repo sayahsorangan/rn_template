@@ -14,7 +14,7 @@ import {IBottomTabScreen} from './route-name';
 const {width: WIDTH} = Dimensions.get('window');
 const Tab = createBottomTabNavigator<RouteStack>();
 
-export const BottomTabScreen: React.VFC = () => (
+export const BottomTabScreen = () => (
   <Tab.Navigator screenOptions={{headerShown: false}} tabBar={props => <BottomTab {...props} />}>
     <Tab.Screen name="home" component={MainHomeScreen} />
   </Tab.Navigator>

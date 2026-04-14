@@ -24,7 +24,7 @@ const App = () => {
     }
     StatusBar.setBarStyle('dark-content');
     const timeout = setTimeout(() => setLoading(false), 1000);
-    () => {
+    return () => {
       clearTimeout(timeout);
     };
   }, []);

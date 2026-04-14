@@ -25,7 +25,7 @@ interface TextInputProps extends TIP {
   iconRightName?: string;
 }
 
-export const TextInput = React.memo((props: TextInputProps): JSX.Element => {
+export const TextInput = React.memo((props: TextInputProps) => {
   const {colors, textVariants, spacing} = theme;
   const {
     TextInputStyle,
@@ -88,7 +88,7 @@ export const TextInput = React.memo((props: TextInputProps): JSX.Element => {
               placeholderTextColor={placeholderTextColor}
               placeholder={placeholder || label}
               onChangeText={v => {
-                onChangeText && onChangeText(v);
+                onChangeText?.(v);
               }}
               {...other}
             />

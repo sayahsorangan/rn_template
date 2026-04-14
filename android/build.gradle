@@ -16,13 +16,14 @@ buildscript {
     // End Changes for CI/CD
 
     ext {
-        buildToolsVersion = "34.0.0"
+        buildToolsVersion = "36.0.0"
         minSdkVersion = 24
-        compileSdkVersion = 34
-        targetSdkVersion = 34
+        compileSdkVersion = 36
+        targetSdkVersion = 36
         googlePlayServicesAuthVersion = "20.7.0" 
-        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
-        ndkVersion = "23.1.7779620"
+        // We use NDK 27 which has C++20 support required by RN 0.76+.
+        ndkVersion = "27.1.12297006"
+        kotlinVersion = "2.1.20"
 
         // Changes for CI/CD
         versionName = getMyVersionName()
@@ -36,5 +37,8 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
     }
 }
+
+apply plugin: "com.facebook.react.rootproject"

@@ -13,7 +13,7 @@ const config: PickOnce<LinkingOptions<RouteStack>, 'config'> = {
 };
 
 const linking: LinkingOptions<RouteStack> = {
-  prefixes: ['https://theratech.therapist', 'theratech.therapist://'],
+  prefixes: ['https://template.app', 'template.app://'],
   config,
 };
 export {linking};

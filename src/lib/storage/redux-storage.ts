@@ -1,10 +1,10 @@
-import {MMKV} from 'react-native-mmkv';
+import {createMMKV} from 'react-native-mmkv';
 
 import {Action, Reducer} from 'redux';
 import {PersistConfig as persistConfigType, persistReducer as persisFunc, Storage} from 'redux-persist';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
 
-export const reduxStorage = new MMKV({id: 'redux-storage', encryptionKey: 'najsdha7dbuaysgefvaetwfg'});
+export const reduxStorage = createMMKV({id: 'redux-storage', encryptionKey: 'najsdha7dbuaysgefvaetwfg'});
 
 export const persistStorage: Storage = {
   setItem: (key, value) => {
@@ -16,7 +16,7 @@ export const persistStorage: Storage = {
     return Promise.resolve(value);
   },
   removeItem: key => {
-    reduxStorage.delete(key);
+    reduxStorage.remove(key);
     return Promise.resolve();
   },
 };

@@ -16,13 +16,15 @@ interface DropdrownInputProps {
   multy?: boolean;
 }
 
-export const DropdrownInput = React.memo((props: DropdrownInputProps): JSX.Element => {
+export const DropdrownInput = React.memo((props: DropdrownInputProps) => {
   const {label, onChangeValue, items, value, multy = false} = props;
   const {textVariants, colors, borderRadii, spacing} = useTheme();
   const [open, setOpen] = useState(false);
 
   const onSelectItem = (item: string) => {
-    !multy && setOpen(false);
+    if (!multy) {
+      setOpen(false);
+    }
     onChangeValue(item);
   };
 

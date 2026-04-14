@@ -13,7 +13,7 @@ interface HeaderProps {
   rightComponent?: React.ReactNode;
 }
 
-export const Header = React.memo((props: HeaderProps): JSX.Element => {
+export const Header = React.memo((props: HeaderProps) => {
   const {title, rightComponent} = props;
 
   return (

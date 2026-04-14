@@ -9,7 +9,7 @@ interface DividerProps {
   vertical?: keyof typeof theme.spacing;
 }
 
-export const Divider = React.memo((props: DividerProps): JSX.Element => {
+export const Divider = React.memo((props: DividerProps) => {
   const {horizontal, vertical} = props;
 
   return (

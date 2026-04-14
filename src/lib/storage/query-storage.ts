@@ -1,6 +1,6 @@
-import {MMKV} from 'react-native-mmkv';
+import {createMMKV} from 'react-native-mmkv';
 
-export const querysecureStorage = new MMKV({id: 'query-secure-storage', encryptionKey: 'asdyugatawefhasdfe'});
+export const querysecureStorage = createMMKV({id: 'query-secure-storage', encryptionKey: 'asdyugatawefhasdfe'});
 
 interface AsyncStorage {
   getItem: (key: string) => string | null;
@@ -16,6 +16,6 @@ export const queryStorage: AsyncStorage = {
     return querysecureStorage.getString(key) ?? null;
   },
   removeItem: key => {
-    querysecureStorage.delete(key);
+    querysecureStorage.remove(key);
   },
 };

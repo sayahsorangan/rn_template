@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 
-import {TouchableOpacity} from 'react-native';
+import {Alert, TouchableOpacity} from 'react-native';
 
 import {Text} from '@app/themes';
 import {Container} from '@components/container';
-import {Navigation} from '@router/navigation-helper';
 
 const MainHomeScreen: React.FC = () => {
   const [tap, setTap] = useState(0);
@@ -15,7 +14,7 @@ const MainHomeScreen: React.FC = () => {
       setTap(0);
     }, 1000);
     if (number_tap > 4) {
-      Navigation.navigate('settings');
+      Alert.alert('Congratulations!', 'You have unlocked the secret screen!');
     }
   };
 
