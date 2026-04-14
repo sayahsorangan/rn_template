@@ -3,6 +3,7 @@ import {Alert} from 'react-native';
 import {AfterResponseHook, BeforeRequestHook} from 'ky';
 import reactotron from 'reactotron-react-native';
 
+import {translate} from '@i18n';
 import {store} from '@redux-store/store';
 
 export const authBeforeResponseHooks: BeforeRequestHook = async ({headers}) => {
@@ -17,7 +18,7 @@ export const authAfterResponseHooks: AfterResponseHook = async (req, option, res
   store.subscribe(store.getState);
   const {UserReducer} = store.getState();
   if (statusCode && UserReducer.auth) {
-    Alert.alert('Session Expired');
+    Alert.alert(translate('session_expired'));
     //handel expire
   } else if (!res.ok && !statusCode) {
     const err: any = await res.json();

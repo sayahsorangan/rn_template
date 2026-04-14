@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Box, Text, theme} from '@app/themes';
+import {Box, Text, useTheme} from '@app/themes';
 
 interface AvatarProps {
   text?: string;
@@ -9,6 +9,7 @@ interface AvatarProps {
 
 export const Avatar = React.memo((props: AvatarProps) => {
   const {text, size = 48} = props;
+  const {colors} = useTheme();
 
   return (
     <Box
@@ -16,7 +17,7 @@ export const Avatar = React.memo((props: AvatarProps) => {
         borderRadius: size,
         width: size,
         height: size,
-        backgroundColor: theme.colors.primary_light,
+        backgroundColor: colors.primary_light,
         justifyContent: 'center',
         alignItems: 'center',
       }}

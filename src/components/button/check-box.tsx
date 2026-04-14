@@ -3,7 +3,7 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native';
 
 import {Icons} from '@app/assets/icons';
-import {theme} from '@app/themes';
+import {useTheme} from '@app/themes';
 
 interface CheckBoxProps {
   onPress?: (value: boolean) => void;
@@ -11,7 +11,7 @@ interface CheckBoxProps {
 }
 
 export const CheckBox = React.memo(({onPress, value}: CheckBoxProps) => {
-  const {colors, spacing} = theme;
+  const {colors, spacing} = useTheme();
 
   return (
     <TouchableOpacity

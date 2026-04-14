@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import {Icons} from '@app/assets/icons';
-import {theme} from '@app/themes';
+import {useTheme} from '@app/themes';
 
 interface SearchInputProps extends TIP {
   value?: string;
@@ -24,7 +24,7 @@ interface SearchInputProps extends TIP {
 }
 
 export const SearchInput = React.memo((props: SearchInputProps) => {
-  const {colors, textVariants, spacing, borderRadii} = theme;
+  const {colors, textVariants, spacing, borderRadii} = useTheme();
   const {
     TextInputStyle,
     containerStyle,

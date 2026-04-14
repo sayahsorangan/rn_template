@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 
 import {Platform, ScrollView, TouchableOpacity} from 'react-native';
 
+import {useTranslation} from 'react-i18next';
+
 import {Icons} from '@app/assets/icons';
 import {Box, Text, useTheme} from '@app/themes';
 import {IconButton} from '@components/button/icon-button';
@@ -19,6 +21,7 @@ interface DropdrownInputProps {
 export const DropdrownInput = React.memo((props: DropdrownInputProps) => {
   const {label, onChangeValue, items, value, multy = false} = props;
   const {textVariants, colors, borderRadii, spacing} = useTheme();
+  const {t} = useTranslation();
   const [open, setOpen] = useState(false);
 
   const onSelectItem = (item: string) => {
@@ -91,10 +94,10 @@ export const DropdrownInput = React.memo((props: DropdrownInputProps) => {
         }}
         label={
           value?.length < 1
-            ? 'Select'
+            ? t('select')
             : value?.length == 1
             ? items.find(i => i.value == value[0])?.label
-            : value?.length + ' item selected'
+            : t('item_selected', {count: value?.length})
         }
         icon_name={'chevron-down'}
         icon_color={colors.primary}

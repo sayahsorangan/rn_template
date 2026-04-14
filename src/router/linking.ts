@@ -7,7 +7,6 @@ const config: PickOnce<LinkingOptions<RouteStack>, 'config'> = {
     [Route.tab]: {
       path: '/',
       exact: true,
-      screens: {},
     },
   },
 };

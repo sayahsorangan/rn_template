@@ -14,6 +14,10 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		E41F853A99EECCFC4061274E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2A225ED1BBE6CD1A60E4340F /* PrivacyInfo.xcprivacy */; };
 		F6E0DF7EA648471CA4D15C91 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A6382C2894F4102B56A2F10 /* Feather.ttf */; };
+		80E28A694E1D4F78B01FC63A /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27593B0E6B33402C93B0F3DA /* Inter-Medium.ttf */; };
+		76AA2BD691F2407AB9934196 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4B8977E70974FF186FD4992 /* Inter-Bold.ttf */; };
+		6717B277FA9246FC9544E5B9 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AF2E4DE03D64AB58F68A026 /* Inter-Regular.ttf */; };
+		D6D40D4325CA41C3918CC4DB /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D8EA9D8FDCE487C8D909F0F /* Inter-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +45,10 @@
 		5709B34CF0A7D63546082F79 /* Pods-template_s2t.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-template_s2t.release.xcconfig"; path = "Target Support Files/Pods-template_s2t/Pods-template_s2t.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = template_s2t/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		27593B0E6B33402C93B0F3DA /* Inter-Medium.ttf */ = {isa = PBXFileReference; name = "Inter-Medium.ttf"; path = "../src/assets/fonts/Inter-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F4B8977E70974FF186FD4992 /* Inter-Bold.ttf */ = {isa = PBXFileReference; name = "Inter-Bold.ttf"; path = "../src/assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9AF2E4DE03D64AB58F68A026 /* Inter-Regular.ttf */ = {isa = PBXFileReference; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1D8EA9D8FDCE487C8D909F0F /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +153,10 @@
 			isa = PBXGroup;
 			children = (
 				4A6382C2894F4102B56A2F10 /* Feather.ttf */,
+				27593B0E6B33402C93B0F3DA /* Inter-Medium.ttf */,
+				F4B8977E70974FF186FD4992 /* Inter-Bold.ttf */,
+				9AF2E4DE03D64AB58F68A026 /* Inter-Regular.ttf */,
+				1D8EA9D8FDCE487C8D909F0F /* Inter-SemiBold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -244,6 +256,10 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				F6E0DF7EA648471CA4D15C91 /* Feather.ttf in Resources */,
 				E41F853A99EECCFC4061274E /* PrivacyInfo.xcprivacy in Resources */,
+				80E28A694E1D4F78B01FC63A /* Inter-Medium.ttf in Resources */,
+				76AA2BD691F2407AB9934196 /* Inter-Bold.ttf in Resources */,
+				6717B277FA9246FC9544E5B9 /* Inter-Regular.ttf in Resources */,
+				D6D40D4325CA41C3918CC4DB /* Inter-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

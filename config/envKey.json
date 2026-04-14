@@ -1,14 +1,14 @@
 [
   {
     "NAME": "dev",
-    "API_HOST": "https://swapi.dev/api/"
+    "API_HOST": "http://192.168.100.138:3333/api/"
   },
   {
     "NAME": "stg",
-    "API_HOST": "https://swapi.dev/api/"
+    "API_HOST": "http://192.168.100.138:3333/api/"
   },
   {
     "NAME": "prd",
-    "API_HOST": "https://swapi.dev/api/"
+    "API_HOST": "http://192.168.100.138:3333/api/"
   }
 ]

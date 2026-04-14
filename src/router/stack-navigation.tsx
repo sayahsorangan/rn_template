@@ -6,25 +6,31 @@ import {Icons} from '@app/assets/icons';
 import {Text, theme} from '@app/themes';
 import {STATUSBAR_HEIGHT} from '@components/container';
 import {store} from '@redux-store/store';
-import {MainHomeScreen} from '@screens/home/main-home';
+import LoginScreen from '@screens/auth/login-screen';
+import CourseDetailScreen from '@screens/course/course-detail-screen';
+import EditProfileScreen from '@screens/profile/edit-profile-screen';
+import SplashScreen from '@screens/splash-screen';
 
+import {BottomTabScreen} from './bottom-navigation';
 import {Route, RouteStackNavigation} from './route-name';
 
 const Stack = createNativeStackNavigator<RouteStackNavigation>();
 
 export const StackNavigator = () => {
   store.subscribe(store.getState);
-  const {UserReducer} = store.getState();
-  const is_login = !!UserReducer.auth;
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         header: p => CustomHeader(p),
       }}
-      initialRouteName={is_login ? 'tab' : 'home'}
+      initialRouteName={Route.splash}
     >
-      <Stack.Screen name={Route.home} component={MainHomeScreen} />
+      <Stack.Screen name={Route.splash} component={SplashScreen} />
+      <Stack.Screen name={Route.login} component={LoginScreen} />
+      <Stack.Screen name={Route.tab} component={BottomTabScreen} />
+      <Stack.Screen name={Route.courseDetail} component={CourseDetailScreen} />
+      <Stack.Screen name={Route.editProfile} component={EditProfileScreen} />
     </Stack.Navigator>
   );
 };

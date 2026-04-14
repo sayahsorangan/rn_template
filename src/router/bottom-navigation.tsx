@@ -2,26 +2,34 @@ import React from 'react';
 
 import {Dimensions, Platform, Text, TouchableOpacity, View} from 'react-native';
 
+import {useTranslation} from 'react-i18next';
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {Icons} from '@app/assets/icons';
 import {TAB_HEIGHT} from '@app/constan/dimensions';
-import {theme} from '@app/themes';
+import {useTheme} from '@app/themes';
+import FavoritesScreen from '@screens/favorites/favorites-screen';
 import {MainHomeScreen} from '@screens/home/main-home';
+import ProfileScreen from '@screens/profile/profile-screen';
 
 import {IBottomTabScreen} from './route-name';
 
 const {width: WIDTH} = Dimensions.get('window');
-const Tab = createBottomTabNavigator<RouteStack>();
+const Tab = createBottomTabNavigator<IBottomTabScreen>();
 
 export const BottomTabScreen = () => (
   <Tab.Navigator screenOptions={{headerShown: false}} tabBar={props => <BottomTab {...props} />}>
     <Tab.Screen name="home" component={MainHomeScreen} />
+    <Tab.Screen name="favorites" component={FavoritesScreen} />
+    <Tab.Screen name="profile" component={ProfileScreen} />
   </Tab.Navigator>
 );
 
 const BottomTab = (props: any) => {
   const TAB_WIDTH = WIDTH;
+  const theme = useTheme();
+  const {t} = useTranslation();
   const {state, descriptors, navigation} = props;
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
@@ -32,8 +40,16 @@ const BottomTab = (props: any) => {
         return (
           <Icons.Feather name="home" size={22} color={isFocused ? theme.colors.primary : theme.colors.grey_light} />
         );
+      case 'favorites':
+        return (
+          <Icons.Feather name="heart" size={22} color={isFocused ? theme.colors.primary : theme.colors.grey_light} />
+        );
+      case 'profile':
+        return (
+          <Icons.Feather name="user" size={22} color={isFocused ? theme.colors.primary : theme.colors.grey_light} />
+        );
       default:
-        return;
+        return null;
     }
   };
 
@@ -49,11 +65,7 @@ const BottomTab = (props: any) => {
           position: 'absolute',
           bottom: 0,
           flexDirection: 'row',
-          shadowColor: '#999',
-          elevation: 8,
-          shadowOffset: {width: 0, height: 0},
-          shadowOpacity: 0.2,
-          shadowRadius: 8,
+          ...theme.elevationStyles.xlarge,
           padding: 8,
           width: TAB_WIDTH,
           ...Platform.select({
@@ -95,7 +107,6 @@ const BottomTab = (props: any) => {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: isFocused ? theme.colors.primary_light : theme.colors.white,
                 borderRadius: theme.borderRadii.sm,
               }}
             >
@@ -103,14 +114,13 @@ const BottomTab = (props: any) => {
               <Text
                 style={{
                   marginTop: theme.spacing.xs,
-                  ...theme.textVariants.body_helper_regular,
+                  ...theme.textVariants.body_helper_bold,
                   fontWeight: '600',
                   color: isFocused ? theme.colors.primary : theme.colors.grey_light,
-                  textTransform: 'capitalize',
                 }}
                 numberOfLines={1}
               >
-                {route.name}
+                {t(route.name)}
               </Text>
             </TouchableOpacity>
           );

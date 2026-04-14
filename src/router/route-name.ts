@@ -1,16 +1,31 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 
 export const Route = {
+  splash: 'splash',
+  login: 'login',
   tab: 'tab',
   home: 'home',
+  courseDetail: 'courseDetail',
+  favorites: 'favorites',
+  profile: 'profile',
+  editProfile: 'editProfile',
 } as const;
 
 export interface IBottomTabScreen {
-  home: 'home';
+  [key: string]: undefined;
+  home: undefined;
+  favorites: undefined;
+  profile: undefined;
 }
 
 export type StackScreens = {
-  [Route.home]: any;
+  [Route.splash]: undefined;
+  [Route.login]: undefined;
+  [Route.home]: undefined;
+  [Route.courseDetail]: {courseId: string};
+  [Route.favorites]: undefined;
+  [Route.profile]: undefined;
+  [Route.editProfile]: undefined;
 };
 
 export type RouteStackNavigation = {

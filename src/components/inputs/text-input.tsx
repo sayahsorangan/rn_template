@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import {Icons} from '@app/assets/icons';
-import {Text, theme} from '@app/themes';
+import {Text, useTheme} from '@app/themes';
 
 interface TextInputProps extends TIP {
   value?: string;
@@ -26,7 +26,7 @@ interface TextInputProps extends TIP {
 }
 
 export const TextInput = React.memo((props: TextInputProps) => {
-  const {colors, textVariants, spacing} = theme;
+  const {colors, textVariants, spacing, borderRadii} = useTheme();
   const {
     TextInputStyle,
     containerStyle,
@@ -62,8 +62,8 @@ export const TextInput = React.memo((props: TextInputProps) => {
             alignItems: 'center',
             borderWidth: 1,
             height: 48,
-            borderRadius: theme.borderRadii.xs,
-            borderColor: theme.colors.grey_light,
+            borderRadius: borderRadii.xs,
+            borderColor: colors.grey_light,
           },
           containerStyle,
         ]}

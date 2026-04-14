@@ -1,18 +1,9 @@
 import React, {Fragment, useEffect, useState} from 'react';
 
-import {
-  ActivityIndicator,
-  Image,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  StatusBarProps,
-  View,
-  ViewProps,
-} from 'react-native';
+import {ActivityIndicator, Platform, SafeAreaView, StatusBar, StatusBarProps, View, ViewProps} from 'react-native';
 
-import {SCREEN_HEIGHT, SCREEN_WIDTH} from '@app/constan/dimensions';
-import {Box, Text, theme} from '@app/themes';
+import {SCREEN_WIDTH} from '@app/constan/dimensions';
+import {Text, useTheme} from '@app/themes';
 
 import {EmptyData} from './empty-data';
 
@@ -23,20 +14,18 @@ interface ContainerProps extends OwnStatusBarProps {
   backgroundColor?: string;
   loading?: boolean;
   containerProps?: ViewProps;
-  whithImageBg?: 1 | 2 | 3 | null;
   is_empty?: boolean;
   loading_text?: string;
 }
 
 export const Container = React.memo((props: ContainerProps) => {
-  const {colors} = theme;
+  const {colors, spacing} = useTheme();
   const {
     children,
     backgroundColor = colors.white,
     translucent = false,
     loading = false,
     containerProps,
-    whithImageBg = null,
     is_empty = false,
     loading_text,
     ...other
@@ -50,13 +39,8 @@ export const Container = React.memo((props: ContainerProps) => {
 
   return (
     <View style={{flex: 1}} {...containerProps}>
-      {whithImageBg && (
-        <Box position={'absolute'} top={0} left={0}>
-          <Image source={{uri: ''}} style={{height: SCREEN_HEIGHT, width: SCREEN_WIDTH}} resizeMode="cover" />
-        </Box>
-      )}
-      <MyStatusBar backgroundColor={whithImageBg ? undefined : backgroundColor} {...{translucent}} {...other} />
-      <View style={{flex: 1, backgroundColor: whithImageBg ? undefined : backgroundColor, overflow: 'hidden'}}>
+      <MyStatusBar backgroundColor={backgroundColor} {...{translucent}} {...other} />
+      <View style={{flex: 1, backgroundColor, overflow: 'hidden'}}>
         {isLoading ? null : is_empty ? <EmptyData /> : children}
       </View>
       {isLoading && (
@@ -75,9 +59,9 @@ export const Container = React.memo((props: ContainerProps) => {
             style={{
               position: 'absolute',
               aspectRatio: 1,
-              padding: theme.spacing.lg,
+              padding: spacing.lg,
               borderRadius: 8,
-              backgroundColor: theme.colors.white,
+              backgroundColor: colors.white,
               alignSelf: 'center',
               justifyContent: 'center',
               alignItems: 'center',
