@@ -560,3 +560,4 @@ Switch with: `yarn env-dev`, `yarn env-stg`, `yarn env-prd`
 13. **Format dates with `moment`** — already installed
 14. **Use `KeyboardAwareScrollView`** for forms — already installed
 15. **Export screen components as default exports**
+16. **Alays Use Theme From Theme for color, spacing, border, font, and avoid using StyleSheet.Create**

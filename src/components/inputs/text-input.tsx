@@ -25,81 +25,84 @@ interface TextInputProps extends TIP {
   iconRightName?: string;
 }
 
-export const TextInput = React.memo((props: TextInputProps) => {
-  const {colors, textVariants, spacing, borderRadii} = useTheme();
-  const {
-    TextInputStyle,
-    containerStyle,
-    label,
-    value,
-    placeholderTextColor = colors.grey,
-    onChangeText,
-    placeholder,
-    iconLeftName,
-    iconRightName,
-    onRightIconPress,
-    ...other
-  } = props;
+export const TextInput = React.memo(
+  React.forwardRef<TIRN, TextInputProps>((props, ref) => {
+    const {colors, textVariants, spacing, borderRadii} = useTheme();
+    const {
+      TextInputStyle,
+      containerStyle,
+      label,
+      value,
+      placeholderTextColor = colors.grey,
+      onChangeText,
+      placeholder,
+      iconLeftName,
+      iconRightName,
+      onRightIconPress,
+      ...other
+    } = props;
 
-  return (
-    <>
-      {!!label && (
-        <Text
-          style={{
-            ...textVariants.body_medium,
-            color: colors.black,
-            marginBottom: spacing.xs,
-          }}
+    return (
+      <>
+        {!!label && (
+          <Text
+            style={{
+              ...textVariants.body_medium,
+              color: colors.black,
+              marginBottom: spacing.xs,
+            }}
+          >
+            {label}
+          </Text>
+        )}
+        <View
+          style={[
+            {
+              paddingHorizontal: spacing.xs,
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 1,
+              height: 48,
+              borderRadius: borderRadii.xs,
+              borderColor: colors.grey_light,
+            },
+            containerStyle,
+          ]}
         >
-          {label}
-        </Text>
-      )}
-      <View
-        style={[
-          {
-            paddingHorizontal: spacing.xs,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderWidth: 1,
-            height: 48,
-            borderRadius: borderRadii.xs,
-            borderColor: colors.grey_light,
-          },
-          containerStyle,
-        ]}
-      >
-        <View style={{flex: 1, alignItems: 'center', marginHorizontal: spacing.xs, flexDirection: 'row'}}>
-          {iconLeftName && (
-            <View style={{marginRight: spacing.xs}}>
-              <Icons.Feather name={iconLeftName} size={24} color={colors.grey} />
+          <View style={{flex: 1, alignItems: 'center', marginHorizontal: spacing.xs, flexDirection: 'row'}}>
+            {iconLeftName && (
+              <View style={{marginRight: spacing.xs}}>
+                <Icons.Feather name={iconLeftName} size={24} color={colors.grey} />
+              </View>
+            )}
+            <View style={{flex: 1}}>
+              <TIRN
+                ref={ref}
+                value={value}
+                style={[
+                  {
+                    ...textVariants.body_medium,
+                    color: colors.black,
+                    padding: 0,
+                  },
+                  TextInputStyle,
+                ]}
+                placeholderTextColor={placeholderTextColor}
+                placeholder={placeholder || label}
+                onChangeText={v => {
+                  onChangeText?.(v);
+                }}
+                {...other}
+              />
             </View>
-          )}
-          <View style={{flex: 1}}>
-            <TIRN
-              value={value}
-              style={[
-                {
-                  ...textVariants.body_medium,
-                  color: colors.black,
-                  padding: 0,
-                },
-                TextInputStyle,
-              ]}
-              placeholderTextColor={placeholderTextColor}
-              placeholder={placeholder || label}
-              onChangeText={v => {
-                onChangeText?.(v);
-              }}
-              {...other}
-            />
+            {iconRightName && (
+              <TouchableOpacity onPress={onRightIconPress} style={{paddingLeft: spacing.xs, height: '100%'}}>
+                <Icons.Feather name={iconRightName} size={24} color={colors.primary} />
+              </TouchableOpacity>
+            )}
           </View>
-          {iconRightName && (
-            <TouchableOpacity onPress={onRightIconPress} style={{paddingLeft: spacing.xs, height: '100%'}}>
-              <Icons.Feather name={iconRightName} size={24} color={colors.primary} />
-            </TouchableOpacity>
-          )}
         </View>
-      </View>
-    </>
-  );
-});
+      </>
+    );
+  }),
+);

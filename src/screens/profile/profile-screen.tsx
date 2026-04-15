@@ -1,6 +1,6 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback} from 'react';
 
-import {Animated, StatusBar, Switch, TouchableOpacity} from 'react-native';
+import {ScrollView, StatusBar, Switch, TouchableOpacity} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 
@@ -13,10 +13,51 @@ import {Box, Text, useTheme} from '@app/themes';
 import {FadeInView} from '@components/animations';
 import {AppImage} from '@components/app-image';
 import {Avatar} from '@components/avatar';
-import {Button} from '@components/button/Button';
-import {Container, STATUSBAR_HEIGHT} from '@components/container';
+import {Container} from '@components/container';
 import {app_action} from '@redux-store/slice/app';
 import {Navigation} from '@router/navigation-helper';
+
+interface MenuItemProps {
+  icon: string;
+  label: string;
+  onPress?: () => void;
+  color?: string;
+  labelColor?: string;
+}
+
+const MenuItem = ({icon, label, onPress, color, labelColor}: MenuItemProps) => {
+  const {colors, spacing} = useTheme();
+  const iconColor = color || colors.grey_dark;
+  const textColor = labelColor || 'black';
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: spacing.md,
+        paddingHorizontal: spacing.md,
+      }}
+    >
+      <Box
+        width={40}
+        height={40}
+        borderRadius="sm"
+        justifyContent="center"
+        alignItems="center"
+        style={{backgroundColor: colors.background}}
+      >
+        <Icons.Feather name={icon} size={20} color={iconColor} />
+      </Box>
+      <Text variant="body_medium" color={textColor as any} marginLeft="sm" flex={1}>
+        {label}
+      </Text>
+      <Icons.Feather name="chevron-right" size={20} color={colors.grey} />
+    </TouchableOpacity>
+  );
+};
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
@@ -25,127 +66,102 @@ const ProfileScreen = () => {
   const themeMode = useAppSelector(state => state.AppReducer.themeMode);
   const language = useAppSelector(state => state.AppReducer.language);
   const {t} = useTranslation();
-  const scrollY = useRef(new Animated.Value(0)).current;
 
   useFocusEffect(
     useCallback(() => {
-      StatusBar.setBarStyle(themeMode === 'dark' ? 'dark-content' : 'light-content');
-      return () => {
-        StatusBar.setBarStyle(themeMode === 'dark' ? 'light-content' : 'dark-content');
-      };
+      StatusBar.setBarStyle(themeMode === 'dark' ? 'light-content' : 'dark-content');
     }, [themeMode]),
   );
 
-  const headerScale = scrollY.interpolate({
-    inputRange: [-100, 0],
-    outputRange: [1.3, 1],
-    extrapolateRight: 'clamp',
-  });
-
-  const avatarTranslateY = scrollY.interpolate({
-    inputRange: [0, 150],
-    outputRange: [0, -20],
-    extrapolate: 'clamp',
-  });
-
   return (
-    <Container translucent>
-      <Animated.ScrollView
-        contentContainerStyle={{paddingBottom: 100}}
-        onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
-        scrollEventThrottle={16}
-      >
-        <Animated.View
-          style={{
-            alignItems: 'center',
-            paddingTop: STATUSBAR_HEIGHT + theme.spacing.xl,
-            paddingBottom: theme.spacing.lg,
-            backgroundColor: theme.colors.primary_dark,
-            transform: [{scale: headerScale}],
-          }}
-        >
-          <Animated.View style={{transform: [{translateY: avatarTranslateY}]}}>
-            <FadeInView delay={100} slideFrom="none">
+    <Container>
+      <ScrollView contentContainerStyle={{paddingBottom: 100}}>
+        {/* Avatar section */}
+        <FadeInView delay={100} slideFrom="none">
+          <Box alignItems="center" marginTop="lg" marginBottom="lg">
+            <Box>
               {user?.avatar ? (
                 <AppImage
                   source={{uri: user.avatar}}
                   style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: 50,
+                    width: 120,
+                    height: 120,
+                    borderRadius: 60,
                   }}
                   containerStyle={{
                     borderWidth: 3,
-                    borderColor: theme.colors.white,
-                    borderRadius: 50,
+                    borderColor: theme.colors.primary_light,
+                    borderRadius: 60,
                   }}
                 />
               ) : (
-                <Avatar text={user?.name} size={100} />
+                <Avatar text={user?.fullName ?? undefined} size={120} />
               )}
-            </FadeInView>
-          </Animated.View>
-          <FadeInView delay={200} slideFrom="bottom" slideDistance={15}>
-            <Text variant="h_4_bold" style={{color: theme.colors.white}} marginTop="sm">
-              {user?.name || 'User'}
+              {/* Edit icon overlay */}
+              <TouchableOpacity
+                onPress={() => Navigation.push('editProfile')}
+                style={{
+                  position: 'absolute',
+                  bottom: 4,
+                  right: 4,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: theme.colors.primary,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 2,
+                  borderColor: theme.colors.white,
+                }}
+              >
+                <Icons.Feather name="edit-2" size={14} color={theme.colors.white} />
+              </TouchableOpacity>
+            </Box>
+            <Text variant="h_4_bold" marginTop="sm">
+              {user?.fullName ?? ''}
             </Text>
-          </FadeInView>
-          <FadeInView delay={300} slideFrom="bottom" slideDistance={15}>
-            <Text variant="body_regular" style={{color: theme.colors.primary_light}} marginTop="xxs">
-              {user?.email || ''}
+            <Text variant="body_regular" color="grey" marginTop="xxs">
+              {user?.email ?? ''}
             </Text>
-          </FadeInView>
-        </Animated.View>
+          </Box>
+        </FadeInView>
 
-        <Box padding="md">
-          {!!user?.bio && (
-            <FadeInView delay={350} slideFrom="left">
-              <Box padding="md" borderRadius="xs" marginBottom="md" style={{backgroundColor: theme.colors.grey_light}}>
-                <Text variant="body_helper_medium" color="grey" marginBottom="xxs">
-                  {t('bio')}
-                </Text>
-                <Text variant="body_regular" color="grey_dark">
-                  {user.bio}
-                </Text>
+        {/* Menu section 1 */}
+        <FadeInView delay={200} slideFrom="bottom" slideDistance={20}>
+          <Box
+            marginHorizontal="md"
+            marginBottom="md"
+            borderRadius="sm"
+            borderWidth={1}
+            borderColor="grey_light"
+            style={{backgroundColor: theme.colors.white}}
+          >
+            <MenuItem icon="user" label={t('edit_profile')} onPress={() => Navigation.push('editProfile')} />
+          </Box>
+        </FadeInView>
+
+        {/* Settings section */}
+        <FadeInView delay={350} slideFrom="bottom" slideDistance={20}>
+          <Box
+            marginHorizontal="md"
+            marginBottom="md"
+            borderRadius="sm"
+            borderWidth={1}
+            borderColor="grey_light"
+            style={{backgroundColor: theme.colors.white}}
+          >
+            <Box flexDirection="row" alignItems="center" paddingVertical="md" paddingHorizontal="md">
+              <Box
+                width={40}
+                height={40}
+                borderRadius="sm"
+                justifyContent="center"
+                alignItems="center"
+                style={{backgroundColor: theme.colors.background}}
+              >
+                <Icons.Feather name={themeMode === 'dark' ? 'moon' : 'sun'} size={20} color={theme.colors.grey_dark} />
               </Box>
-            </FadeInView>
-          )}
-
-          <FadeInView delay={450} slideFrom="right">
-            <TouchableOpacity
-              onPress={() => Navigation.push('editProfile')}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                padding: theme.spacing.md,
-                backgroundColor: theme.colors.white,
-                borderRadius: theme.borderRadii.xs,
-                borderWidth: 1,
-                borderColor: theme.colors.grey_light,
-                marginBottom: theme.spacing.sm,
-              }}
-            >
-              <Icons.Feather name="edit-2" size={20} color={theme.colors.primary} />
-              <Text variant="body_medium" marginLeft="sm" flex={1}>
-                {t('edit_profile')}
-              </Text>
-              <Icons.Feather name="chevron-right" size={20} color={theme.colors.grey} />
-            </TouchableOpacity>
-          </FadeInView>
-
-          <FadeInView delay={500} slideFrom="right">
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              padding="md"
-              borderRadius="xs"
-              borderWidth={1}
-              borderColor="grey_light"
-              marginBottom="sm"
-              style={{backgroundColor: theme.colors.white}}
-            >
-              <Icons.Feather name={themeMode === 'dark' ? 'moon' : 'sun'} size={20} color={theme.colors.primary} />
-              <Text variant="body_medium" marginLeft="sm" flex={1}>
+              <Text variant="body_medium" color="black" marginLeft="sm" flex={1}>
                 {t('dark_mode')}
               </Text>
               <Switch
@@ -157,21 +173,19 @@ const ProfileScreen = () => {
                 thumbColor={themeMode === 'dark' ? theme.colors.primary : theme.colors.grey}
               />
             </Box>
-          </FadeInView>
-
-          <FadeInView delay={550} slideFrom="right">
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              padding="md"
-              borderRadius="xs"
-              borderWidth={1}
-              borderColor="grey_light"
-              marginBottom="sm"
-              style={{backgroundColor: theme.colors.white}}
-            >
-              <Icons.Feather name="globe" size={20} color={theme.colors.primary} />
-              <Text variant="body_medium" marginLeft="sm" flex={1}>
+            <Box height={1} backgroundColor="grey_light" marginHorizontal="md" />
+            <Box flexDirection="row" alignItems="center" paddingVertical="md" paddingHorizontal="md">
+              <Box
+                width={40}
+                height={40}
+                borderRadius="sm"
+                justifyContent="center"
+                alignItems="center"
+                style={{backgroundColor: theme.colors.background}}
+              >
+                <Icons.Feather name="globe" size={20} color={theme.colors.grey_dark} />
+              </Box>
+              <Text variant="body_medium" color="black" marginLeft="sm" flex={1}>
                 {t('language')}
               </Text>
               <TouchableOpacity
@@ -189,28 +203,37 @@ const ProfileScreen = () => {
                   {language === 'en' ? 'EN' : 'ID'}
                 </Text>
                 <Icons.Feather
-                  name="chevron-down"
+                  name="chevron-right"
                   size={14}
                   color={theme.colors.primary_dark}
                   style={{marginLeft: 4}}
                 />
               </TouchableOpacity>
             </Box>
-          </FadeInView>
+            <Box height={1} backgroundColor="grey_light" marginHorizontal="md" />
+            <MenuItem icon="help-circle" label="Help & Support" />
+          </Box>
+        </FadeInView>
 
-          <FadeInView delay={650} slideFrom="bottom">
-            <Box marginTop="md">
-              <Button
-                label={t('logout')}
-                onPress={onLogout}
-                secondary
-                ButtonStyle={{borderColor: theme.colors.danger}}
-                LabelStyle={{color: theme.colors.danger}}
-              />
-            </Box>
-          </FadeInView>
-        </Box>
-      </Animated.ScrollView>
+        {/* Logout section */}
+        <FadeInView delay={500} slideFrom="bottom" slideDistance={20}>
+          <Box
+            marginHorizontal="md"
+            borderRadius="sm"
+            borderWidth={1}
+            borderColor="grey_light"
+            style={{backgroundColor: theme.colors.white}}
+          >
+            <MenuItem
+              icon="log-out"
+              label={t('logout')}
+              onPress={onLogout}
+              color={theme.colors.danger}
+              labelColor="danger"
+            />
+          </Box>
+        </FadeInView>
+      </ScrollView>
     </Container>
   );
 };

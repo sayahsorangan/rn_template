@@ -19,12 +19,22 @@ const EditProfileScreen = () => {
   const user = useAppSelector(state => state.UserReducer.user);
   const theme = useTheme();
   const {t} = useTranslation();
-  const [name, setName] = useState(user?.name || '');
+  const [name, setName] = useState(user?.fullName || '');
   const [avatar, setAvatar] = useState(user?.avatar || '');
   const [bio, setBio] = useState(user?.bio || '');
   const [nameError, setNameError] = useState('');
 
-  const updateMutation = AuthQuery.updateUser({
+  const updateMutation = AuthQuery.updateProfile({
+    onSuccess: updatedProfile => {
+      dispatch(
+        user_action.updateUserProfile({
+          fullName: updatedProfile.fullName,
+          avatar: updatedProfile.avatar,
+          bio: updatedProfile.bio,
+        }),
+      );
+      Navigation.back();
+    },
     onError: () => {
       // Silently fail remote sync — local state is already updated
     },
@@ -37,14 +47,11 @@ const EditProfileScreen = () => {
     }
     setNameError('');
 
-    const updatedData = {name: name.trim(), avatar: avatar.trim(), bio: bio.trim()};
-    dispatch(user_action.updateUserProfile(updatedData));
-
-    if (user?.id) {
-      updateMutation.mutate({id: user.id, data: updatedData});
-    }
-
-    Navigation.back();
+    updateMutation.mutate({
+      fullName: name.trim(),
+      avatar: avatar.trim() || undefined,
+      bio: bio.trim() || undefined,
+    });
   };
 
   return (

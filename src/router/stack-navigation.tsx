@@ -7,7 +7,9 @@ import {Text, theme} from '@app/themes';
 import {STATUSBAR_HEIGHT} from '@components/container';
 import {store} from '@redux-store/store';
 import LoginScreen from '@screens/auth/login-screen';
+import RegisterScreen from '@screens/auth/register-screen';
 import CourseDetailScreen from '@screens/course/course-detail-screen';
+import ModuleDetailScreen from '@screens/course/module-detail-screen';
 import EditProfileScreen from '@screens/profile/edit-profile-screen';
 import SplashScreen from '@screens/splash-screen';
 
@@ -28,8 +30,10 @@ export const StackNavigator = () => {
     >
       <Stack.Screen name={Route.splash} component={SplashScreen} />
       <Stack.Screen name={Route.login} component={LoginScreen} />
+      <Stack.Screen name={Route.register} component={RegisterScreen} />
       <Stack.Screen name={Route.tab} component={BottomTabScreen} />
       <Stack.Screen name={Route.courseDetail} component={CourseDetailScreen} />
+      <Stack.Screen name={Route.moduleDetail} component={ModuleDetailScreen} />
       <Stack.Screen name={Route.editProfile} component={EditProfileScreen} />
     </Stack.Navigator>
   );

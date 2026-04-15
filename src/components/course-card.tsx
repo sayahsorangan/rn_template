@@ -10,12 +10,11 @@ import {ICourse} from '@models/API/course';
 
 interface CourseCardProps {
   course: ICourse.Course;
-  isSaved: boolean;
   onPress: () => void;
   onToggleFavorite: () => void;
 }
 
-export const CourseCard = React.memo(({course, isSaved, onPress, onToggleFavorite}: CourseCardProps) => {
+export const CourseCard = React.memo(({course, onPress, onToggleFavorite}: CourseCardProps) => {
   const {colors, borderRadii} = useTheme();
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
@@ -33,7 +32,7 @@ export const CourseCard = React.memo(({course, isSaved, onPress, onToggleFavorit
         }}
       >
         <AppImage
-          source={{uri: course.image}}
+          source={{uri: course.image ?? undefined}}
           style={{
             width: '100%',
             height: 160,
@@ -49,7 +48,7 @@ export const CourseCard = React.memo(({course, isSaved, onPress, onToggleFavorit
                 {course.title}
               </Text>
             </Box>
-            <BookmarkButton isSaved={isSaved} onPress={onToggleFavorite} />
+            <BookmarkButton isSaved={course.isFavorited} onPress={onToggleFavorite} />
           </Box>
 
           <Text variant="body_regular" color="grey" numberOfLines={2} marginTop="xxs">

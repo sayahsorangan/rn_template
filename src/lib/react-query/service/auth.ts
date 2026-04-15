@@ -2,23 +2,51 @@ import {Api} from '@lib/ky/base';
 import {ApiResponse} from '@models/API/app';
 import {IUser} from '@models/API/user';
 
-const getUsers = async () => {
-  const resp = await Api.get('users').json<ApiResponse<IUser.User[]>>();
+const login = async (data: IUser.LoginRequest) => {
+  const resp = await Api.post('auth/login', {json: data}).json<ApiResponse<IUser.LoginResponse>>();
   return resp.data;
 };
 
-const getUserByEmail = async (email: string) => {
-  const resp = await Api.get(`users?email=${encodeURIComponent(email)}`).json<ApiResponse<IUser.User[]>>();
+const register = async (data: IUser.RegisterRequest) => {
+  const resp = await Api.post('auth/register', {json: data}).json<ApiResponse<IUser.RegisterResponse>>();
   return resp.data;
 };
 
-const updateUser = async ({id, data}: {id: string; data: Partial<IUser.User>}) => {
-  const resp = await Api.put(`users/${id}`, {json: data}).json<ApiResponse<IUser.User>>();
+const refreshToken = async (token: string) => {
+  const resp = await Api.post('auth/refresh', {json: {refreshToken: token}}).json<
+    ApiResponse<{accessToken: string; refreshToken: string; expiresIn: number}>
+  >();
+  return resp.data;
+};
+
+const logout = async (accessToken?: string) => {
+  const resp = await Api.post('auth/logout', {json: {accessToken}}).json<
+    ApiResponse<{success: boolean; message: string}>
+  >();
+  return resp.data;
+};
+
+const getMe = async () => {
+  const resp = await Api.get('auth/me').json<ApiResponse<IUser.User>>();
+  return resp.data;
+};
+
+const getUserById = async (userId: string) => {
+  const resp = await Api.get(`auth/user/${userId}`).json<ApiResponse<IUser.User>>();
+  return resp.data;
+};
+
+const updateProfile = async (data: IUser.UpdateProfileRequest) => {
+  const resp = await Api.put('course/profile', {json: data}).json<ApiResponse<IUser.UserProfile>>();
   return resp.data;
 };
 
 export const AuthService = {
-  getUsers,
-  getUserByEmail,
-  updateUser,
+  login,
+  register,
+  refreshToken,
+  logout,
+  getMe,
+  getUserById,
+  updateProfile,
 };

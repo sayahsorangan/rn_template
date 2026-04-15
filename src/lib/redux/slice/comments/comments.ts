@@ -25,6 +25,12 @@ const slice = createSlice({
       }
       state.commentsByCourse[courseId].unshift(payload);
     },
+    deleteComment: (state, {payload}: PayloadAction<{commentId: string; courseId: string}>) => {
+      const comments = state.commentsByCourse[payload.courseId];
+      if (comments) {
+        state.commentsByCourse[payload.courseId] = comments.filter(c => c.id !== payload.commentId);
+      }
+    },
     toggleLike: (state, {payload}: PayloadAction<{commentId: string; courseId: string}>) => {
       const comments = state.commentsByCourse[payload.courseId];
       if (comments) {

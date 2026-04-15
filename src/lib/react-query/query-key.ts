@@ -3,14 +3,27 @@ export const AppQueryKey = {
 };
 
 export const AuthQueryKey = {
-  getUsers: 'getUsers',
+  login: 'login',
+  register: 'register',
+  refreshToken: 'refreshToken',
+  logout: 'logout',
+  getMe: 'getMe',
+  updateProfile: 'updateProfile',
 };
 
 export const CourseQueryKey = {
   getCourses: 'getCourses',
+  getMyCourses: 'getMyCourses',
   getCourseDetail: 'getCourseDetail',
+  getFavorites: 'getFavorites',
+  toggleFavorite: 'toggleFavorite',
+  deleteCourse: 'deleteCourse',
+  generateCourse: 'generateCourse',
+  regenerateModule: 'regenerateModule',
 };
 
 export const CommentQueryKey = {
-  getComments: 'getComments',
+  addComment: 'addComment',
+  deleteComment: 'deleteComment',
+  toggleLike: 'toggleLike',
 };

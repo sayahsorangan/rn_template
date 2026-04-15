@@ -5,10 +5,10 @@
   },
   {
     "NAME": "stg",
-    "API_HOST": "http://192.168.100.138:3333/api/"
+    "API_HOST": "https://parallelogram-project.com/api/"
   },
   {
     "NAME": "prd",
-    "API_HOST": "http://192.168.100.138:3333/api/"
+    "API_HOST": "https://parallelogram-project.com/api/"
   }
 ]

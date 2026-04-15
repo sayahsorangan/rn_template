@@ -14,7 +14,8 @@
     "env-prd": "node ./scripts/setenv.js --name=prd",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "postinstall": "./scripts/post-install.sh",
-    "android-clean": "cd android && ./gradlew clean && cd.."
+    "android-clean": "cd android && ./gradlew clean && cd..",
+    "android-build": "node ./scripts/setenv.js --name=prd && cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.3.12",
@@ -35,6 +36,7 @@
     "react-native-date-picker": "^5.0.12",
     "react-native-device-info": "^14.0.4",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-markdown-display": "^7.0.2",
     "react-native-mmkv": "^4.3.1",
     "react-native-nitro-modules": "^0.35.0",
     "react-native-safe-area-context": "^5.5.2",

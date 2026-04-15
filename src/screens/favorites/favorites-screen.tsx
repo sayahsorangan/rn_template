@@ -1,10 +1,11 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
-import {ActivityIndicator, FlatList} from 'react-native';
+import {FlatList, RefreshControl} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 
-import {useAppDispatch, useAppSelector} from '@app/hooks/redux';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {Box, Text, useTheme} from '@app/themes';
 import {FadeInView} from '@components/animations';
 import {Container, STATUSBAR_HEIGHT} from '@components/container';
@@ -12,49 +13,41 @@ import {CourseCard} from '@components/course-card';
 import {EmptyData} from '@components/empty-data';
 import {ICourse} from '@models/API/course';
 import {CourseQuery} from '@react-query/query-hooks';
-import {favorites_action} from '@redux-store/slice/favorites';
 import {Navigation} from '@router/navigation-helper';
 
 const FavoritesScreen = () => {
-  const dispatch = useAppDispatch();
-  const savedCourseIds = useAppSelector(state => state.FavoritesReducer.savedCourseIds);
   const theme = useTheme();
   const {t} = useTranslation();
 
-  const {data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage} = CourseQuery.getCourses();
+  const {data: favorites = [], isLoading, refetch, isRefetching} = CourseQuery.getFavorites();
 
-  const courses = useMemo(() => data?.pages.flatMap(page => page.data) ?? [], [data]);
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
-  const savedCourses = useMemo(() => {
-    if (!courses.length) {
-      return [];
-    }
-    return courses.filter(c => savedCourseIds.includes(c.id));
-  }, [courses, savedCourseIds]);
-
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const toggleFavoriteMutation = CourseQuery.toggleFavorite({
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
   const handleToggleFavorite = useCallback(
     (courseId: string) => {
-      dispatch(favorites_action.toggleFavorite(courseId));
+      toggleFavoriteMutation.mutate(courseId);
     },
-    [dispatch],
+    [toggleFavoriteMutation],
   );
 
   const handleCoursePress = useCallback((courseId: string) => {
-    Navigation.push('courseDetail', {courseId});
+    Navigation.navigate('courseDetail', {courseId});
   }, []);
 
   const renderItem = useCallback(
-    ({item, index}: {item: ICourse.Course; index: number}) => (
+    ({item}: {item: ICourse.Course}) => (
       <CourseCard
-        key={index}
         course={item}
-        isSaved={true}
         onPress={() => handleCoursePress(item.id)}
         onToggleFavorite={() => handleToggleFavorite(item.id)}
       />
@@ -65,12 +58,10 @@ const FavoritesScreen = () => {
   return (
     <Container loading={isLoading} translucent>
       <FlatList
-        data={savedCourses}
+        data={favorites}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={{paddingBottom: 100}}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
         ListHeaderComponent={
           <FadeInView delay={0} slideFrom="left">
             <Box
@@ -81,18 +72,14 @@ const FavoritesScreen = () => {
             >
               <Text variant="h_3_bold">{t('favorites')}</Text>
               <Text variant="body_regular" color="grey" marginTop="xxs">
-                {t('saved_courses_count', {count: savedCourses.length})}
+                {t('saved_courses_count', {count: favorites.length})}
               </Text>
             </Box>
           </FadeInView>
         }
         ListEmptyComponent={!isLoading ? <EmptyData text={t('no_saved_courses')} /> : null}
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <Box paddingVertical="md" alignItems="center">
-              <ActivityIndicator size="small" color={theme.colors.primary} />
-            </Box>
-          ) : null
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} colors={[theme.colors.primary]} />
         }
       />
     </Container>

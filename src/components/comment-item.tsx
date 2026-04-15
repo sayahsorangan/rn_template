@@ -18,10 +18,10 @@ export const CommentItem = React.memo(({comment, onToggleLike}: CommentItemProps
   const {colors, spacing} = useTheme();
   return (
     <Box flexDirection="row" paddingVertical="sm" borderBottomWidth={1} style={{borderBottomColor: colors.grey_light}}>
-      <Avatar text={comment.user.name} size={36} />
+      <Avatar text={comment.user?.fullName ?? undefined} size={36} />
       <Box flex={1} marginLeft="sm">
         <Box flexDirection="row" justifyContent="space-between" alignItems="center">
-          <Text variant="body_medium">{comment.user.name}</Text>
+          <Text variant="body_medium">{comment.user?.fullName || 'Unknown'}</Text>
           <Text variant="body_helper_regular" color="grey">
             {moment(comment.createdAt).fromNow()}
           </Text>
@@ -34,6 +34,7 @@ export const CommentItem = React.memo(({comment, onToggleLike}: CommentItemProps
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            alignSelf: 'flex-start',
             marginTop: spacing.xs,
           }}
           hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}

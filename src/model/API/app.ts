@@ -3,32 +3,23 @@ export interface IResponse {
   msg: string;
 }
 
-export interface Pagination {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
 }
 
-export interface PaginatedResponse<T> {
-  success: boolean;
-  data: T[];
-  pagination: Pagination;
-}
-
-export interface PaginationParams {
-  page: number;
-  limit: number;
+export interface ApiError {
+  success: false;
+  error: {
+    code: string;
+    message: string;
+  };
 }
 
 export namespace IApp {
   export interface IAuth {
-    isAuthenticated: boolean;
-    token?: string;
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
   }
 }

@@ -34,7 +34,9 @@ export const CategoryFilter = React.memo(({categories, selectedCategory, onSelec
               marginRight="xs"
               borderRadius="xl"
               style={{
-                backgroundColor: isSelected ? colors.primary : colors.grey_light,
+                backgroundColor: isSelected ? colors.primary : 'transparent',
+                borderWidth: 1,
+                borderColor: isSelected ? colors.primary : colors.grey_light,
               }}
             >
               <Text

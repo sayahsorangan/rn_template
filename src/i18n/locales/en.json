@@ -7,6 +7,7 @@
   "no_courses_found": "No courses found",
   "failed_load_courses": "Failed to load courses",
   "retry": "Retry",
+  "loading": "Loading...",
   "favorites": "Favorites",
   "saved_courses_count": "{{count}} saved courses",
   "no_saved_courses": "No saved courses yet",
@@ -41,6 +42,18 @@
   "select": "Select",
   "item_selected": "{{count}} item selected",
   "session_expired": "Session Expired",
+  "welcome": "Welcome,",
+  "search_for_courses": "Search For Courses",
+  "search_results": "Search Results",
+  "popular_courses": "Design Courses",
+  "view_all": "View All",
+  "lessons": "lessons",
+  "top_rated_instructor": "Top Rated Instructor",
   "home": "Home",
-  "profile": "Profile"
+  "profile": "Profile",
+  "modules": "Modules",
+  "course_outline": "Course Outline",
+  "reviews": "Reviews",
+  "module_failed": "Content generation failed",
+  "read_content": "Tap to read content"
 }

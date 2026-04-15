@@ -1,26 +1,26 @@
 import {Api} from '@lib/ky/base';
-import {ApiResponse, PaginatedResponse, PaginationParams} from '@models/API/app';
+import {ApiResponse} from '@models/API/app';
 import {ICourse} from '@models/API/course';
 
-const getCommentsByCourse = async (courseId: string, {page, limit}: PaginationParams) => {
-  const resp = await Api.get('comments', {searchParams: {courseId, page, limit}}).json<
-    PaginatedResponse<ICourse.Comment>
-  >();
-  return resp;
-};
-
-const addComment = async (data: Omit<ICourse.Comment, 'id'>) => {
-  const resp = await Api.post('comments', {json: data}).json<ApiResponse<ICourse.Comment>>();
+const addComment = async ({courseId, message}: {courseId: string; message: string}) => {
+  const resp = await Api.post(`course/${courseId}/comments`, {json: {message}}).json<ApiResponse<ICourse.Comment>>();
   return resp.data;
 };
 
-const updateComment = async ({id, data}: {id: string; data: Partial<ICourse.Comment>}) => {
-  const resp = await Api.put(`comments/${id}`, {json: data}).json<ApiResponse<ICourse.Comment>>();
+const deleteComment = async (commentId: string) => {
+  const resp = await Api.delete(`course/comments/${commentId}`).json<
+    ApiResponse<{success: boolean; message: string}>
+  >();
+  return resp.data;
+};
+
+const toggleLike = async (commentId: string) => {
+  const resp = await Api.post(`course/comments/${commentId}/like`).json<ApiResponse<{liked: boolean}>>();
   return resp.data;
 };
 
 export const CommentService = {
-  getCommentsByCourse,
   addComment,
-  updateComment,
+  deleteComment,
+  toggleLike,
 };

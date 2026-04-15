@@ -22,7 +22,7 @@ export const Avatar = React.memo((props: AvatarProps) => {
         alignItems: 'center',
       }}
     >
-      <Text fontSize={24 * (size / 48)} marginTop={'xs'} color={'primary'}>
+      <Text fontSize={24 * (size / 48)} color={'primary'}>
         {text ? text[0]?.toUpperCase() : 'X'}
       </Text>
     </Box>

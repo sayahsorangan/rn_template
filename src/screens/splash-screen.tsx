@@ -42,9 +42,9 @@ const SplashScreen = () => {
       }
       store.subscribe(store.getState);
       const {UserReducer} = store.getState();
-      const isAuthenticated = !!UserReducer.auth?.isAuthenticated;
+      const isAuthenticated = !!UserReducer.auth?.accessToken;
       if (isAuthenticated) {
-        Navigation.replace('tab');
+        Navigation.replace('tab', {screen: 'home'});
       } else {
         Navigation.replace('login');
       }

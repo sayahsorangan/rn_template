@@ -1,25 +1,42 @@
 import {getAppInfo} from './hooks/app';
-import {getUsers, loginByEmail, updateUser} from './hooks/auth';
-import {addComment, getCommentsByCourse, updateComment} from './hooks/comment';
-import {getCourseDetail, getCourses} from './hooks/course';
+import {getMe, login, logout, register, updateProfile} from './hooks/auth';
+import {addComment, deleteComment, toggleLike} from './hooks/comment';
+import {
+  deleteCourse,
+  getCourseDetail,
+  getCourses,
+  getCoursesPaginated,
+  getFavorites,
+  getMyCourses,
+  regenerateModule,
+  toggleFavorite,
+} from './hooks/course';
 
 export const AppQuery = {
   getAppInfo,
 };
 
 export const AuthQuery = {
-  getUsers,
-  loginByEmail,
-  updateUser,
+  login,
+  register,
+  getMe,
+  updateProfile,
+  logout,
 };
 
 export const CourseQuery = {
   getCourses,
+  getCoursesPaginated,
+  getMyCourses,
   getCourseDetail,
+  getFavorites,
+  toggleFavorite,
+  deleteCourse,
+  regenerateModule,
 };
 
 export const CommentQuery = {
-  getCommentsByCourse,
   addComment,
-  updateComment,
+  deleteComment,
+  toggleLike,
 };
