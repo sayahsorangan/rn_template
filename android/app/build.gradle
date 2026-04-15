@@ -106,7 +106,7 @@ android {
              // Changes for CI/CD
 
             // Remove signing config release for CI/CD injection
-            //signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             shrinkResources enableProguardInReleaseBuilds

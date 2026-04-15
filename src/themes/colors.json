@@ -1,15 +1,15 @@
 {
-  "primary": "#3B5BE4",
-  "primary_dark": "#132694",
-  "primary_light": "#CAD0E9",
+  "primary": "#0050D4",
+  "primary_dark": "#00225B",
+  "primary_light": "#c4d6f3",
 
-  "secondary": "#2BBA99",
-  "secondary_dark": "#0C8369",
-  "secondary_light": "#B8D3CD",
+  "secondary": "#0777E3",
+  "secondary_dark": "#054380",
+  "secondary_light": "#59ADFF",
 
-  "tertiary": "#CD914E",
-  "tertiary_dark": "#895314",
-  "tertiary_light": "#EEE2D4",
+  "tertiary": "#0050D4",
+  "tertiary_dark": "#00225B",
+  "tertiary_light": "#6EA0F1",
 
   "grey": "#6B6882",
   "grey_dark": "#423F5B",
@@ -40,5 +40,7 @@
   "info_light": "#ECF7FF",
 
   "black": "#000000",
-  "white": "#FFFFFF"
+  "white": "#FFFFFF",
+
+  "background": "#FFFFFF"
 }

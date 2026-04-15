@@ -3,7 +3,7 @@ import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 
 import {Icons} from '@app/assets/icons';
-import {Text, theme} from '@app/themes';
+import {Text, useTheme} from '@app/themes';
 import {Navigation} from '@router/navigation-helper';
 
 import {STATUSBAR_HEIGHT} from './container';
@@ -15,30 +15,32 @@ interface HeaderProps {
 
 export const Header = React.memo((props: HeaderProps) => {
   const {title, rightComponent} = props;
+  const {colors, spacing} = useTheme();
 
   return (
     <View
       style={{
-        paddingHorizontal: theme.spacing.xs,
-        paddingVertical: theme.spacing.xs,
+        paddingHorizontal: spacing.xs,
+        paddingVertical: spacing.xs,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingTop: STATUSBAR_HEIGHT + theme.spacing.xs,
+        paddingTop: STATUSBAR_HEIGHT + spacing.xs,
       }}
     >
       <TouchableOpacity
         style={{
-          padding: theme.spacing.xs,
+          padding: spacing.xs,
         }}
         onPress={() => Navigation.back()}
       >
-        <Icons.Feather name="chevron-left" size={32} color={theme.colors.grey_dark} />
+        <Icons.Feather name="chevron-left" size={24} color={colors.grey_dark} />
       </TouchableOpacity>
-      <Text numberOfLines={1} variant={'h_4_medium'} marginHorizontal={'xs'}>
-        {title}
-      </Text>
-
-      {rightComponent ? rightComponent : <View style={{width: theme.spacing.xs * 2 + 24}} />}
+      <View style={{flex: 1}}>
+        <Text numberOfLines={1} variant={'h_5_medium'} marginHorizontal={'xs'}>
+          {title}
+        </Text>
+      </View>
+      {rightComponent ? rightComponent : <View style={{width: spacing.xs * 2 + 24}} />}
     </View>
   );
 });

@@ -34,7 +34,6 @@ fs.readFile(path.resolve(__dirname, '../config/envkey.json'), 'utf8', function (
         });
         fs.closeSync(fd);
       }
-      console.log(`Config Set to ${config.NAME}`);
     }
   });
 });

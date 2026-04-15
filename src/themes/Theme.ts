@@ -1,7 +1,9 @@
 import {createTheme, useTheme as useReTheme} from '@shopify/restyle';
 
 import border_radius from './border-radius.json';
-import colors from './colors.json';
+import colors_white from './colors.json';
+import colors_dark from './dark-colors.json';
+import {elevationStyles} from './elevation';
 import font_size from './fonts-size.json';
 import font from './fonts.json';
 import spacing from './spacing.json';
@@ -103,7 +105,7 @@ const generateStyle = () => {
     Object.keys(texts).map(f => {
       data = {
         ...data,
-        [s + '_' + f]: {...texts[f], fontSize: font_size[s]},
+        [s + '_' + f]: {...texts[f], fontSize: font_size[s] - 2},
       };
     });
   });
@@ -111,7 +113,7 @@ const generateStyle = () => {
 };
 
 export const theme = createTheme({
-  colors,
+  colors: colors_white,
   spacing,
   borderRadii: border_radius,
   breakpoints: {
@@ -119,6 +121,20 @@ export const theme = createTheme({
     tablet: 768,
     largeTablet: 1024,
   },
+  elevationStyles,
+  textVariants: generateStyle(),
+});
+
+export const dark_theme = createTheme({
+  colors: colors_dark,
+  spacing,
+  borderRadii: border_radius,
+  breakpoints: {
+    phone: 0,
+    tablet: 768,
+    largeTablet: 1024,
+  },
+  elevationStyles,
   textVariants: generateStyle(),
 });
 

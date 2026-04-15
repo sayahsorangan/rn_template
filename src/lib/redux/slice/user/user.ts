@@ -16,8 +16,13 @@ const slice = createSlice({
     setAuth: (state, {payload}: PayloadAction<IApp.IAuth>) => {
       state.auth = payload;
     },
-    setUser: (state, {payload}: PayloadAction<any>) => {
+    setUser: (state, {payload}: PayloadAction<IUser.User>) => {
       state.user = payload;
+    },
+    updateUserProfile: (state, {payload}: PayloadAction<Partial<IUser.User>>) => {
+      if (state.user) {
+        state.user = {...state.user, ...payload};
+      }
     },
     onLogout: state => {
       state.auth = undefined;

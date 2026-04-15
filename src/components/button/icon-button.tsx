@@ -3,7 +3,7 @@ import React from 'react';
 import {ActivityIndicator, StyleProp, TextStyle, TouchableOpacity, ViewProps, ViewStyle} from 'react-native';
 
 import {Icons} from '@app/assets/icons';
-import {Box, Text, theme} from '@app/themes';
+import {Box, Text, useTheme} from '@app/themes';
 
 interface IconButtonProps extends ViewProps {
   onPress?: () => void;
@@ -21,7 +21,7 @@ interface IconButtonProps extends ViewProps {
 }
 
 export const IconButton = React.memo((props: IconButtonProps) => {
-  const {colors, spacing, textVariants} = theme;
+  const {colors, spacing, textVariants} = useTheme();
   const {
     onPress,
     icon_name = 'x',
