@@ -9,20 +9,37 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icons} from '@app/assets/icons';
 import {TAB_HEIGHT} from '@app/constan/dimensions';
 import {useTheme} from '@app/themes';
-import FavoritesScreen from '@screens/favorites/favorites-screen';
 import {MainHomeScreen} from '@screens/home/main-home';
-import ProfileScreen from '@screens/profile/profile-screen';
 
 import {IBottomTabScreen} from './route-name';
 
 const {width: WIDTH} = Dimensions.get('window');
 const Tab = createBottomTabNavigator<IBottomTabScreen>();
 
+const TAB_ICONS: Record<keyof IBottomTabScreen, string> = {
+  home: 'home',
+  favorites: 'heart',
+  profile: 'user',
+};
+
+type TabIconProps = {
+  routeName: keyof IBottomTabScreen;
+  isFocused: boolean;
+  primaryColor: string;
+  greyColor: string;
+};
+
+const TabIcon = ({routeName, isFocused, primaryColor, greyColor}: TabIconProps) => {
+  const iconName = TAB_ICONS[routeName];
+  if (!iconName) return null;
+  return <Icons.Feather name={iconName} size={22} color={isFocused ? primaryColor : greyColor} />;
+};
+
+const renderBottomTab = (props: any) => <BottomTab {...props} />;
+
 export const BottomTabScreen = () => (
-  <Tab.Navigator screenOptions={{headerShown: false}} tabBar={props => <BottomTab {...props} />}>
+  <Tab.Navigator screenOptions={{headerShown: false}} tabBar={renderBottomTab}>
     <Tab.Screen name="home" component={MainHomeScreen} />
-    <Tab.Screen name="favorites" component={FavoritesScreen} />
-    <Tab.Screen name="profile" component={ProfileScreen} />
   </Tab.Navigator>
 );
 
@@ -32,26 +49,6 @@ const BottomTab = (props: any) => {
   const {t} = useTranslation();
   const {state, descriptors, navigation} = props;
   const focusedOptions = descriptors[state.routes[state.index].key].options;
-
-  const TabIcon = (routeName: keyof IBottomTabScreen, index: number) => {
-    const isFocused = state.index === index;
-    switch (routeName) {
-      case 'home':
-        return (
-          <Icons.Feather name="home" size={22} color={isFocused ? theme.colors.primary : theme.colors.grey_light} />
-        );
-      case 'favorites':
-        return (
-          <Icons.Feather name="heart" size={22} color={isFocused ? theme.colors.primary : theme.colors.grey_light} />
-        );
-      case 'profile':
-        return (
-          <Icons.Feather name="user" size={22} color={isFocused ? theme.colors.primary : theme.colors.grey_light} />
-        );
-      default:
-        return null;
-    }
-  };
 
   if (focusedOptions.tabBarVisible === false) {
     return null;
@@ -110,7 +107,12 @@ const BottomTab = (props: any) => {
                 borderRadius: theme.borderRadii.sm,
               }}
             >
-              {TabIcon(route.name, index)}
+              {TabIcon({
+                routeName: route.name,
+                isFocused,
+                primaryColor: theme.colors.primary,
+                greyColor: theme.colors.grey_light,
+              })}
               <Text
                 style={{
                   marginTop: theme.spacing.xs,

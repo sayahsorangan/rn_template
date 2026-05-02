@@ -13,15 +13,14 @@ import {FadeInView} from '@components/animations';
 import {Button} from '@components/button/Button';
 import {Container} from '@components/container';
 import {TextInput} from '@components/inputs/text-input';
-import {AuthQuery} from '@react-query/query-hooks';
+import {AuthQueries} from '@react-query/auth/hooks';
 import {user_action} from '@redux-store/slice/user';
 import {Navigation} from '@router/navigation-helper';
-import {Route} from '@router/route-name';
 
 const SOCIAL_BUTTONS = [
   {key: 'google', label: 'G', bg: '#FFFFFF', color: '#EA4335', borderColor: '#E0E0E0'},
   {key: 'facebook', icon: 'facebook', bg: '#3B5998', color: '#FFFFFF'},
-  {key: 'twitter', icon: 'twitter', bg: '#1DA1F2', color: '#FFFFFF'},
+  {key: 'twitter', icon: 'twitter', bg: '#7c858a', color: '#FFFFFF'},
 ];
 
 const LoginScreen = () => {
@@ -34,14 +33,12 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const passwordRef = useRef<RNTextInput>(null);
 
-  const loginMutation = AuthQuery.login({
+  const loginMutation = AuthQueries.useSignIn({
     onSuccess: data => {
-      dispatch(user_action.setUser(data.user));
+      dispatch(user_action.setUser(data as any));
       dispatch(
         user_action.setAuth({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-          expiresIn: data.expiresIn,
+          accessToken: data.token,
         }),
       );
       Navigation.reset({name: 'tab'});
@@ -206,7 +203,7 @@ const LoginScreen = () => {
             <Text variant="body_regular" color="grey">
               Don't have account ?{' '}
             </Text>
-            <TouchableOpacity onPress={() => Navigation.navigate(Route.register)}>
+            <TouchableOpacity>
               <Text variant="body_semibold" color="info">
                 Sign up
               </Text>

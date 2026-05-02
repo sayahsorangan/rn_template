@@ -4,7 +4,7 @@ import {useTheme} from '@app/themes';
 import {Container} from '@components/container';
 import {UnderDev} from '@components/under-dev';
 
-const EmptyScreen: React.FC = () => {
+const EmptyScreen = () => {
   const {colors} = useTheme();
 
   return (
