@@ -2,10 +2,11 @@
 
 ## Project Overview
 
-React Native 0.78.2 + TypeScript 5.0.4 course app template.  
+React Native 0.84.1 + TypeScript 5.8.3 course app template.  
 **No Expo** — uses bare React Native with `react-native-community/cli`.
 
 Run commands:
+
 ```bash
 yarn install
 yarn android   # or yarn ios
@@ -15,20 +16,19 @@ yarn android   # or yarn ios
 
 ## Import Aliases (ALWAYS use these)
 
-| Alias | Maps To |
-|-------|---------|
-| `@router/*` | `./src/router/*` |
-| `@models/*` | `./src/model/*` |
-| `@config` | `./config/env` |
-| `@react-query/*` | `./src/lib/react-query/*` |
-| `@redux-store/*` | `./src/lib/redux/*` |
-| `@lib/*` | `./src/lib/*` |
-| `@i18n` | `./src/i18n` |
-| `@components-atoms/*` | `./src/components/atoms/*` |
-| `@components-organisms/*` | `./src/components/organisms/*` |
-| `@components/*` | `./src/components/*` |
-| `@screens/*` | `./src/screens/*` |
-| `@app/*` | `./src/*` |
+| Alias                 | Maps To                    |
+| --------------------- | -------------------------- | --- | ------------------------- | ------------------------------ | --- | ------------------------- | ------------------------------ |
+| `@router/*`           | `./src/router/*`           |
+| `@models/*`           | `./src/model/*`            |
+| `@config`             | `./config/env`             |
+| `@react-query/*`      | `./src/lib/react-query/*`  |
+| `@redux-store/*`      | `./src/lib/redux/*`        |
+| `@lib/*`              | `./src/lib/*`              |
+| `@i18n`               | `./src/i18n`               |
+| `@components-atoms/*` | `./src/components/atoms/*` |     | `@components-molecules/*` | `./src/components/molecules/*` |     | `@components-organisms/*` | `./src/components/organisms/*` |
+| `@components/*`       | `./src/components/*`       |
+| `@screens/*`          | `./src/screens/*`          |
+| `@app/*`              | `./src/*`                  |
 
 **NEVER use relative paths** like `../../../components/Button`. Always use aliases.  
 Aliases are defined in both `tsconfig.path.json` and `babel.config.js`.
@@ -48,46 +48,56 @@ src/
 │   └── {name}.tsx       # Standalone shared components
 ├── constan/             # Constants (app.ts, dimensions.ts) — note: "constan" not "constants"
 ├── helpers/             # Utility functions (api.tsx, auth.tsx)
-├── hooks/               # Custom React hooks
-├── i18n/                # i18next setup + locales/ (en, id)
+├── hooks/               # Custom React hooks (redux.ts)
+├── i18n/                # i18next setup + locales/ (en.json, id.json)
 ├── lib/                 # 3rd-party library integrations
-│   ├── ky/              # HTTP client (base.ts, hooks.ts)
+│   ├── ky/              # HTTP client (base.ts, hooks.ts, index.ts)
 │   ├── react-query/     # Data fetching layer
-│   │   ├── hooks/       # Feature-specific query hooks
-│   │   ├── service/     # API service functions
-│   │   ├── query-key.ts # All query cache keys
-│   │   ├── query-hooks.ts  # Exported hook aggregates
-│   │   ├── query-client.ts # QueryClient config
-│   │   └── custom-hooks.ts # Generic useRQ/useMQ/useInfiniteRQ
+│   │   ├── {feature}/   # Feature folder: hooks.ts, keys.ts, service.ts, types.ts
+│   │   ├── custom-hooks.ts  # Generic useRQ/useMQ/useInfiniteRQ wrappers
+│   │   ├── query-client.ts  # QueryClient config + MMKV persister
+│   │   └── query-provider.tsx  # QueryClientProvider wrapper
 │   ├── redux/           # State management
-│   │   ├── slice/       # Feature slices: {feature}/{feature}.ts
+│   │   ├── slice/       # Feature slices: {feature}/{feature}.ts + index.ts
 │   │   ├── store.ts     # Store configuration
-│   │   ├── root-reducer.ts # Combined reducers
-│   │   └── store-key.ts # Slice key constants
-│   └── storage/         # MMKV storage adapters
+│   │   ├── root-reducer.ts  # Combined reducers
+│   │   └── store-key.ts     # Slice key constants
+│   └── storage/         # MMKV storage adapters (redux-storage.ts, query-storage.ts)
 ├── model/               # TypeScript type definitions
-│   ├── API/             # API response/request types (namespace-based)
-│   └── redux-state/     # Redux state types
+│   └── API/             # API response/request types (namespace-based)
 ├── router/              # Navigation config
+│   ├── main-navigation.tsx   # NavigationContainer entry
+│   ├── stack-navigation.tsx  # Root stack (splash → login → tabs)
+│   ├── bottom-navigation.tsx # Bottom tab navigator
+│   ├── navigation-helper.ts  # Navigation helpers
+│   ├── route-name.ts         # Route name constants + type params
+│   └── linking.ts            # Deep link config
 ├── screens/             # Screen components (grouped by feature/)
+│   ├── auth/            # login-screen.tsx
+│   ├── home/            # main-home.tsx
+│   ├── splash-screen.tsx
+│   └── empty-screen.tsx
+├── test-utils.tsx       # renderWithProviders helper
 └── themes/              # @shopify/restyle design tokens
+    ├── Theme.ts, Box.tsx, Text.tsx, elevation.ts
+    └── *.json           # colors, dark-colors, spacing, fonts, border-radius tokens
 ```
 
 ---
 
 ## Naming Conventions
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Screen files | `kebab-case.tsx` | `login-screen.tsx`, `main-home.tsx` |
-| Component files | `kebab-case.tsx` or `PascalCase.tsx` | `Button.tsx`, `empty-data.tsx` |
-| Redux slice files | `{feature}.ts` inside `slice/{feature}/` | `slice/user/user.ts` |
-| Service files | `{feature}.ts` inside `service/` | `service/app.ts` |
-| Hook files | `{feature}.ts` inside `hooks/` | `hooks/app.ts` |
-| Redux actions export | `{feature}_action` | `user_action`, `app_action` |
-| Redux reducer export | `{Feature}Reducer` | `UserReducer`, `AppReducer` |
-| Query key export | `{Feature}QueryKey` | `AppQueryKey` |
-| API model namespace | `I{Feature}` | `IUser`, `IApp`, `ICourse` |
+| Type                 | Convention                               | Example                             |
+| -------------------- | ---------------------------------------- | ----------------------------------- |
+| Screen files         | `kebab-case.tsx`                         | `login-screen.tsx`, `main-home.tsx` |
+| Component files      | `kebab-case.tsx` or `PascalCase.tsx`     | `Button.tsx`, `empty-data.tsx`      |
+| Redux slice files    | `{feature}.ts` inside `slice/{feature}/` | `slice/user/user.ts`                |
+| Service files        | `{feature}.ts` inside `service/`         | `service/app.ts`                    |
+| Hook files           | `{feature}.ts` inside `hooks/`           | `hooks/app.ts`                      |
+| Redux actions export | `{feature}_action`                       | `user_action`, `app_action`         |
+| Redux reducer export | `{Feature}Reducer`                       | `UserReducer`, `AppReducer`         |
+| Query key export     | `{Feature}QueryKey`                      | `AppQueryKey`                       |
+| API model namespace  | `I{Feature}`                             | `IUser`, `IApp`, `ICourse`          |
 
 ---
 
@@ -110,7 +120,7 @@ const initialState: FeatureState = {
 };
 
 const slice = createSlice({
-  name: storeKey.Feature,           // key from store-key.ts
+  name: storeKey.Feature, // key from store-key.ts
   initialState,
   reducers: {
     setData: (state, {payload}) => {
@@ -121,13 +131,11 @@ const slice = createSlice({
 });
 
 export const feature_action = slice.actions;
-export const FeatureReducer = persistReducer(
-  {key: storeKey.Feature},
-  slice.reducer,
-);
+export const FeatureReducer = persistReducer({key: storeKey.Feature}, slice.reducer);
 ```
 
 **Requirements:**
+
 1. Always add the key to `store-key.ts` first
 2. Always use the custom `persistReducer` from `@lib/storage/redux-storage` (NOT from redux-persist directly)
 3. Register the reducer in `root-reducer.ts`
@@ -138,51 +146,59 @@ export const FeatureReducer = persistReducer(
 
 ## React Query Pattern
 
-Follow this 4-file pattern for each feature:
+React Query files are organized **per feature** inside `src/lib/react-query/{feature}/` with 4 files each:
 
-### 1. Query Keys (`src/lib/react-query/query-key.ts`)
+### 1. Keys (`src/lib/react-query/{feature}/keys.ts`)
+
 ```typescript
 export const FeatureQueryKey = {
-  getList: 'getFeatureList',
-  getDetail: 'getFeatureDetail',
+  signIn: 'signIn',
+} as const;
+```
+
+### 2. Types (`src/lib/react-query/{feature}/types.ts`)
+
+```typescript
+export interface FeatureRequest { ... }
+export interface FeatureResponse { ... }
+```
+
+### 3. Service (`src/lib/react-query/{feature}/service.ts`)
+
+```typescript
+import {Api} from '@lib/ky';
+import {MutationFunction} from '@tanstack/react-query';
+
+const doSomething: MutationFunction<FeatureResponse, FeatureRequest> = async data => {
+  return await Api.post('endpoint', {json: data}).json<FeatureResponse>();
+};
+
+export const FeatureServices = {doSomething};
+```
+
+### 4. Hooks (`src/lib/react-query/{feature}/hooks.ts`)
+
+```typescript
+import {useMQ, useRQ, UseMQOptions} from '@react-query/custom-hooks';
+import {FeatureQueryKey} from './keys';
+import {FeatureServices} from './service';
+import {FeatureRequest, FeatureResponse} from './types';
+
+function useDoSomething(options?: UseMQOptions<FeatureResponse, FeatureRequest>) {
+  return useMQ([FeatureQueryKey.doSomething], FeatureServices.doSomething, options);
+}
+
+export const FeatureQueries = {
+  useDoSomething,
 };
 ```
 
-### 2. Service (`src/lib/react-query/service/{feature}.ts`)
+**Usage in screens:**
+
 ```typescript
-import {Api} from '@lib/ky/base';
+import {AuthQueries} from '@react-query/auth/hooks';
 
-export const FeatureService = {
-  getList: async () => {
-    const res = await Api.get('endpoint').json();
-    return res;
-  },
-  create: async (data: CreatePayload) => {
-    const res = await Api.post('endpoint', {json: data}).json();
-    return res;
-  },
-};
-```
-
-### 3. Hooks (`src/lib/react-query/hooks/{feature}.ts`)
-```typescript
-import {useMQ, useRQ} from '@react-query/custom-hooks';
-import {FeatureQueryKey} from '@react-query/query-key';
-import {FeatureService} from '@react-query/service/{feature}';
-
-export const getFeatureList = () =>
-  useRQ(FeatureQueryKey.getList, FeatureService.getList);
-
-export const createFeature = () =>
-  useMQ(FeatureQueryKey.create, FeatureService.create);
-```
-
-### 4. Export (`src/lib/react-query/query-hooks.ts`)
-```typescript
-export const FeatureQuery = {
-  getList: getFeatureList,
-  create: createFeature,
-};
+const {mutate} = AuthQueries.useSignIn();
 ```
 
 ---
@@ -210,24 +226,29 @@ const result = await Api.post('comments', {json: payload}).json();
 Use `Box` and `Text` primitives from `@app/themes`. **Never use raw `View`/`Text` from react-native** unless absolutely necessary.
 
 ### Box (replaces View)
+
 ```tsx
 import {Box} from '@app/themes';
-<Box padding="m" backgroundColor="white" borderRadius="m" />
+<Box padding="m" backgroundColor="white" borderRadius="m" />;
 ```
 
 ### Text (replaces RN Text)
+
 ```tsx
 import {Text} from '@app/themes';
-<Text variant="body_medium" color="black" />
+<Text variant="body_medium" color="black" />;
 ```
 
 ### Text Variants
+
 Format: `{fontSize}_{fontWeight}` — e.g. `h_1_bold`, `body_regular`, `button_l_semibold`
 
 ### Spacing Tokens
+
 `xxs`(4) `xs`(8) `s`(12) `sm`(14) `m`(16) `ml`(20) `l`(24) `xl`(32) `xxl`(48) `xxxl`(64) `huge`(128)
 
 ### Color Tokens
+
 - Primary: `primary`, `primary_light`, `primary_dark`
 - Secondary: `secondary`, `secondary_light`, `secondary_dark`
 - Status: `success`, `danger`, `warning`, `info`
@@ -235,6 +256,7 @@ Format: `{fontSize}_{fontWeight}` — e.g. `h_1_bold`, `body_regular`, `button_l
 - Background: `bg_color`
 
 ### Border Radius Tokens
+
 `xxs`(4) `xs`(8) `s`(12) `sm`(14) `m`(16) `ml`(20) `l`(24) `xl`(32) `xxl`(48) `round`(100000)
 
 ---
@@ -243,26 +265,28 @@ Format: `{fontSize}_{fontWeight}` — e.g. `h_1_bold`, `body_regular`, `button_l
 
 ### Existing Reusable Components
 
-| Component | Import | Key Props |
-|-----------|--------|-----------|
-| `Button` | `@components/button/Button` | `label`, `onPress`, `secondary`, `disabled`, `loading` |
-| `TextInput` | `@components/inputs/text-input` | `label`, `placeholder`, `iconLeftName`, `iconRightName`, `secureTextEntry` |
-| `SearchInput` | `@components/inputs/search-input` | `value`, `placeholder`, `onChangeText` |
-| `DropdownInput` | `@components/inputs/dropdown-input` | `label`, `items`, `value`, `onChangeValue`, `multy` |
-| `DateInput` | `@components/inputs/date-input` | `type`, `label`, `value`, `onDateChange` |
-| `Header` | `@components/header` | `title`, `rightComponent` (includes back button) |
-| `Container` | `@components/container` | `loading`, `is_empty`, `loading_text`, `backgroundColor` |
-| `Avatar` | `@components/avatar` | `text` (shows first letter), `size` |
-| `EmptyData` | `@components/empty-data` | Used for empty state displays |
-| `Modal` | `@components/modal` | `show`, `animationType`, `onDissmiss` |
-| `Divider` | `@components/divider` | `horizontal`/`vertical` spacing |
-| `ErrorBoundary` | `@components-atoms/error-boundary` | Wraps app for crash protection |
+| Component       | Import                              | Key Props                                                                  |
+| --------------- | ----------------------------------- | -------------------------------------------------------------------------- |
+| `Button`        | `@components/button/Button`         | `label`, `onPress`, `secondary`, `disabled`, `loading`                     |
+| `TextInput`     | `@components/inputs/text-input`     | `label`, `placeholder`, `iconLeftName`, `iconRightName`, `secureTextEntry` |
+| `SearchInput`   | `@components/inputs/search-input`   | `value`, `placeholder`, `onChangeText`                                     |
+| `DropdownInput` | `@components/inputs/dropdown-input` | `label`, `items`, `value`, `onChangeValue`, `multy`                        |
+| `DateInput`     | `@components/inputs/date-input`     | `type`, `label`, `value`, `onDateChange`                                   |
+| `Header`        | `@components/header`                | `title`, `rightComponent` (includes back button)                           |
+| `Container`     | `@components/container`             | `loading`, `is_empty`, `loading_text`, `backgroundColor`                   |
+| `Avatar`        | `@components/avatar`                | `text` (shows first letter), `size`                                        |
+| `EmptyData`     | `@components/empty-data`            | Used for empty state displays                                              |
+| `Modal`         | `@components/modal`                 | `show`, `animationType`, `onDissmiss`                                      |
+| `Divider`       | `@components/divider`               | `horizontal`/`vertical` spacing                                            |
+| `ErrorBoundary` | `@components-atoms/error-boundary`  | Wraps app for crash protection                                             |
 
 ### Icons
+
 Use Feather icons from `react-native-vector-icons/Feather`:
+
 ```tsx
 import Feather from 'react-native-vector-icons/Feather';
-<Feather name="heart" size={20} color="#000" />
+<Feather name="heart" size={20} color="#000" />;
 ```
 
 ---
@@ -270,6 +294,7 @@ import Feather from 'react-native-vector-icons/Feather';
 ## Navigation
 
 ### Navigation Helpers
+
 ```typescript
 import {Navigation} from '@router/navigation-helper';
 
@@ -278,14 +303,16 @@ Navigation.back();
 Navigation.push('RouteName', {param: value});
 Navigation.replace('RouteName');
 Navigation.reset('RouteName');
-Navigation.resetToMain();  // Reset to bottom tabs
+Navigation.resetToMain(); // Reset to bottom tabs
 ```
 
 ### Route Definition
+
 All route names go in `src/router/route-name.ts` as a `Route` constant object.  
 Type params in `RouteStackNavigation` interface for type-safe navigation.
 
 ### Structure
+
 - `MainNavigator` — wraps `NavigationContainer` + deep linking
 - `StackNavigator` — root stack (auth check → login or tabs)
 - `BottomTabScreen` — bottom tab navigator for authenticated area
@@ -296,10 +323,10 @@ Type params in `RouteStackNavigation` interface for type-safe navigation.
 
 **MMKV is used everywhere** — NOT AsyncStorage.
 
-| Storage | Key | Purpose |
-|---------|-----|---------|
-| Redux persist | `redux-storage` | Persists all Redux slices |
-| React Query cache | `RQ_Cache_storage` | Offline query cache |
+| Storage             | Key                          | Purpose                      |
+| ------------------- | ---------------------------- | ---------------------------- |
+| Redux persist       | `redux-storage`              | Persists all Redux slices    |
+| React Query cache   | `RQ_Cache_storage`           | Offline query cache          |
 | Redux slice persist | Per-slice key via `storeKey` | Individual slice persistence |
 
 Use the custom `persistReducer` wrapper from `@lib/storage/redux-storage` — it auto-configures MMKV.
@@ -387,14 +414,14 @@ src/
 
 ### Test Naming Convention
 
-| Type | File Pattern | Location |
-|------|-------------|----------|
-| Component tests | `{ComponentName}.test.tsx` | `__tests__/` sibling folder |
-| Screen tests | `{screen-name}.test.tsx` | `__tests__/` sibling folder |
-| Redux slice tests | `{feature}.test.ts` | `__tests__/` inside slice folder |
-| Hook tests | `{hook-name}.test.ts` | `__tests__/` sibling folder |
-| Helper/util tests | `{helper}.test.ts` | `__tests__/` sibling folder |
-| Service tests | `{feature}.test.ts` | `__tests__/` sibling folder |
+| Type              | File Pattern               | Location                         |
+| ----------------- | -------------------------- | -------------------------------- |
+| Component tests   | `{ComponentName}.test.tsx` | `__tests__/` sibling folder      |
+| Screen tests      | `{screen-name}.test.tsx`   | `__tests__/` sibling folder      |
+| Redux slice tests | `{feature}.test.ts`        | `__tests__/` inside slice folder |
+| Hook tests        | `{hook-name}.test.ts`      | `__tests__/` sibling folder      |
+| Helper/util tests | `{helper}.test.ts`         | `__tests__/` sibling folder      |
+| Service tests     | `{feature}.test.ts`        | `__tests__/` sibling folder      |
 
 ### Test Utility (`src/test-utils.tsx`)
 
@@ -419,6 +446,7 @@ yarn test -- --testPathPattern="components"  # Filter by path
 ### Test Patterns
 
 **Component test:**
+
 ```tsx
 import React from 'react';
 import {renderWithProviders} from '@app/test-utils';
@@ -426,26 +454,20 @@ import Button from '@components/button/Button';
 
 describe('Button', () => {
   it('renders label text', () => {
-    const {getByText} = renderWithProviders(
-      <Button label="Submit" onPress={jest.fn()} />,
-    );
+    const {getByText} = renderWithProviders(<Button label="Submit" onPress={jest.fn()} />);
     expect(getByText('Submit')).toBeTruthy();
   });
 
   it('calls onPress when pressed', () => {
     const onPress = jest.fn();
-    const {getByText} = renderWithProviders(
-      <Button label="Submit" onPress={onPress} />,
-    );
+    const {getByText} = renderWithProviders(<Button label="Submit" onPress={onPress} />);
     fireEvent.press(getByText('Submit'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
   it('disables press when loading', () => {
     const onPress = jest.fn();
-    const {getByText} = renderWithProviders(
-      <Button label="Submit" onPress={onPress} loading />,
-    );
+    const {getByText} = renderWithProviders(<Button label="Submit" onPress={onPress} loading />);
     fireEvent.press(getByText('Submit'));
     expect(onPress).not.toHaveBeenCalled();
   });
@@ -453,6 +475,7 @@ describe('Button', () => {
 ```
 
 **Redux slice test:**
+
 ```tsx
 import {user_action, UserReducer} from '@redux-store/slice/user/user';
 
@@ -464,16 +487,14 @@ describe('UserReducer', () => {
   });
 
   it('clears state on logout', () => {
-    const state = UserReducer(
-      {user: {id: '1'}, auth: {token: 'abc'}},
-      user_action.onLogout(),
-    );
+    const state = UserReducer({user: {id: '1'}, auth: {token: 'abc'}}, user_action.onLogout());
     expect(state.user).toBeUndefined();
   });
 });
 ```
 
 **Screen test:**
+
 ```tsx
 import React from 'react';
 import {renderWithProviders} from '@app/test-utils';
@@ -498,15 +519,15 @@ describe('LoginScreen', () => {
 
 ### What to Test
 
-| Priority | What | Why |
-|----------|------|-----|
-| High | Redux slices | Pure functions — easy to test, high value |
-| High | Helper/utility functions | Business logic isolation |
-| Medium | Screen rendering | Ensure screens mount without crashing |
-| Medium | Component props/interactions | Button presses, input changes |
-| Medium | Form validation | Login, edit profile validation logic |
-| Low | Navigation flow | Complex mocking needed |
-| Low | API services | Better tested via integration tests |
+| Priority | What                         | Why                                       |
+| -------- | ---------------------------- | ----------------------------------------- |
+| High     | Redux slices                 | Pure functions — easy to test, high value |
+| High     | Helper/utility functions     | Business logic isolation                  |
+| Medium   | Screen rendering             | Ensure screens mount without crashing     |
+| Medium   | Component props/interactions | Button presses, input changes             |
+| Medium   | Form validation              | Login, edit profile validation logic      |
+| Low      | Navigation flow              | Complex mocking needed                    |
+| Low      | API services                 | Better tested via integration tests       |
 
 ### Mocking Guidelines
 
@@ -520,14 +541,14 @@ describe('LoginScreen', () => {
 
 ## Dev Tooling
 
-| Tool | Purpose |
-|------|---------|
-| Reactotron | Redux state + network debugging (`ReactotronConfig.js`) |
-| Redux Flipper | Redux devtools in Flipper (DEV only) |
-| React Query DevPlugin | Query cache inspector |
-| Lefthook | Pre-commit: ESLint fix → Prettier → import-sorter |
-| ESLint | `config/eslint.js` — allows `@ts-ignore` and `any` |
-| import-sorter | Groups: react → RN → external → aliases → relative |
+| Tool                  | Purpose                                                 |
+| --------------------- | ------------------------------------------------------- |
+| Reactotron            | Redux state + network debugging (`ReactotronConfig.js`) |
+| Redux Flipper         | Redux devtools in Flipper (DEV only)                    |
+| React Query DevPlugin | Query cache inspector                                   |
+| Lefthook              | Pre-commit: ESLint fix → Prettier → import-sorter       |
+| ESLint                | `config/eslint.js` — allows `@ts-ignore` and `any`      |
+| import-sorter         | Groups: react → RN → external → aliases → relative      |
 
 ---
 
@@ -539,7 +560,7 @@ export const NAME: 'dev' | 'stg' | 'prd';
 export const API_HOST: string;
 ```
 
-Switch with: `yarn env-dev`, `yarn env-stg`, `yarn env-prd`
+Switch with: `yarn env:dev`, `yarn env:stg`, `yarn env:prd`
 
 ---
 
@@ -553,7 +574,7 @@ Switch with: `yarn env-dev`, `yarn env-stg`, `yarn env-prd`
 6. **Use `useAppSelector`/`useAppDispatch`** — never raw `useSelector`/`useDispatch`
 7. **Use Feather icons** — `react-native-vector-icons/Feather`
 8. **Keep `constan/` spelling** — do not rename to `constants`
-9. **Use `Container` + `Header`** as screen wrappers
+9. **Use `Container`** as screen wrappers
 10. **Put screens in feature folders** — `src/screens/{feature}/{screen-name}.tsx`
 11. **Persist new slices** with the custom `persistReducer` from `@lib/storage/redux-storage`
 12. **Use MMKV** — never use AsyncStorage

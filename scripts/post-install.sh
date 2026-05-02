@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-yarn env-dev
+yarn env:dev
