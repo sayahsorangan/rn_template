@@ -4,6 +4,7 @@
     "jsx": "react-native",
     "noEmit": true,
     "ignoreDeprecations": "6.0",
+    "types": ["jest"],
     "checkJs": true,
     "importHelpers": true,
     "noFallthroughCasesInSwitch": true,

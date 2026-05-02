@@ -5,7 +5,7 @@ import {Modal as RNModal, StyleProp, TouchableWithoutFeedback, View, ViewStyle} 
 export interface ModalProps {
   show: boolean;
   opacity?: number;
-  children: JSX.Element;
+  children: React.ReactElement;
   overlayStyle?: StyleProp<ViewStyle>;
   onDissmiss?: (status: false) => void;
   style?: StyleProp<ViewStyle>;

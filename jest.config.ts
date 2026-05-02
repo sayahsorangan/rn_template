@@ -29,7 +29,7 @@ const config: Config = {
     '^.+\\.[jt]sx?$': 'babel-jest',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-navigation|@shopify/restyle|react-native-vector-icons|react-native-mmkv|react-native-nitro-modules|react-native-screens|react-native-safe-area-context|react-native-keyboard-aware-scroll-view|react-native-date-picker|react-native-device-info|@tanstack|react-redux)/)',
+    'node_modules/(?!(react-native|@react-native|@react-navigation|@shopify/restyle|react-native-vector-icons|react-native-mmkv|react-native-nitro-modules|react-native-screens|react-native-safe-area-context|react-native-keyboard-aware-scroll-view|react-native-date-picker|react-native-device-info|@tanstack|react-redux|immer|@reduxjs)/)',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: [
