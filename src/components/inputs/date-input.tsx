@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 
-import DatePicker from 'react-native-date-picker';
+import {Platform, TouchableOpacity} from 'react-native';
+
+import DateTimePicker, {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 
 import moment from 'moment';
 
 import {Box, Text, useTheme} from '@app/themes';
+import {Modal} from '@components/modal';
 
 import {IconButton} from '../button/icon-button';
 
@@ -20,24 +23,56 @@ export const DateInput = React.memo((props: DateInputProps) => {
   const {type, onDateChange, label, value} = props;
 
   const [show, setShow] = useState(false);
+  const [tempDate, setTempDate] = useState(value);
 
-  const handelDateChange = (date: Date) => {
+  const handleChange = (event: DateTimePickerEvent, date?: Date) => {
+    if (Platform.OS === 'android') {
+      setShow(false);
+      if (event.type === 'set' && date) {
+        onDateChange(date);
+      }
+    } else {
+      if (date) setTempDate(date);
+    }
+  };
+
+  const handleConfirm = () => {
     setShow(false);
-    onDateChange(date);
+    onDateChange(tempDate);
   };
 
   return (
     <Box flex={1}>
-      <DatePicker
-        modal
-        open={show}
-        onCancel={() => setShow(false)}
-        onConfirm={d => handelDateChange(d)}
-        dividerColor={colors.grey}
-        mode={type}
-        date={value}
-        locale="en"
-      />
+      {/* Android — inline picker shown as system dialog */}
+      {show && Platform.OS === 'android' && <DateTimePicker value={value} mode={type} onChange={handleChange} />}
+
+      {/* iOS — bottom sheet modal with spinner + confirm */}
+      {Platform.OS === 'ios' && (
+        <Modal show={show} onDissmiss={() => setShow(false)} animationType="slide">
+          <Box backgroundColor="white" borderTopLeftRadius="lg" borderTopRightRadius="lg" padding="md">
+            <Box flexDirection="row" justifyContent="space-between" alignItems="center" marginBottom="sm">
+              <TouchableOpacity onPress={() => setShow(false)}>
+                <Text variant="body_regular" color="danger">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleConfirm}>
+                <Text variant="body_semibold" color="primary">
+                  Done
+                </Text>
+              </TouchableOpacity>
+            </Box>
+            <DateTimePicker
+              value={tempDate}
+              mode={type}
+              display="spinner"
+              onChange={handleChange}
+              style={{backgroundColor: colors.white}}
+            />
+          </Box>
+        </Modal>
+      )}
+
       {!!label && (
         <Text variant={'body_regular'} mb={'xs'}>
           {label}

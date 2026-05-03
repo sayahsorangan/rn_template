@@ -81,7 +81,7 @@ android {
 
     namespace "com.template_s2t"
     defaultConfig {
-        applicationId "template.s2t.app"
+        applicationId "id.sandi.template.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // Changes for CI/CD

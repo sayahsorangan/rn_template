@@ -1,12 +1,16 @@
-import {TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {Icons} from '@app/assets/icons';
-import {Text, theme} from '@app/themes';
+import {Box, Text, theme} from '@app/themes';
 import {STATUSBAR_HEIGHT} from '@components/container';
 import {store} from '@redux-store/store';
 import LoginScreen from '@screens/auth/login-screen';
+import RegisterScreen from '@screens/auth/register-screen';
+import ChatScreen from '@screens/chat/chat-screen';
+import AddKnowledgeScreen from '@screens/knowledge/add-knowledge-screen';
+import ProfileScreen from '@screens/profile/profile-screen';
 import SplashScreen from '@screens/splash-screen';
 
 import {BottomTabScreen} from './bottom-navigation';
@@ -26,24 +30,32 @@ export const StackNavigator = () => {
     >
       <Stack.Screen name={Route.splash} component={SplashScreen} />
       <Stack.Screen name={Route.login} component={LoginScreen} />
+      <Stack.Screen name={Route.register} component={RegisterScreen} />
       <Stack.Screen name={Route.tab} component={BottomTabScreen} />
+      <Stack.Screen name={Route.chat} component={ChatScreen} options={{headerShown: true, title: 'New Chat'}} />
+      <Stack.Screen
+        name={Route.addKnowledge}
+        component={AddKnowledgeScreen}
+        options={{headerShown: true, title: 'Add Knowledge'}}
+      />
+      <Stack.Screen name={Route.profile} component={ProfileScreen} options={{headerShown: true, title: 'Profile'}} />
     </Stack.Navigator>
   );
 };
 
 const CustomHeader = (p: any) => {
   return (
-    <View
+    <Box
       style={{
-        paddingHorizontal: theme.spacing.xs,
-        paddingVertical: theme.spacing.xs,
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: theme.colors.white,
         paddingTop: STATUSBAR_HEIGHT + theme.spacing.xs,
-        borderBottomWidth: 1,
-        borderColor: theme.colors.grey_light,
       }}
+      paddingHorizontal="xs"
+      paddingVertical="xs"
+      flexDirection="row"
+      alignItems="center"
+      backgroundColor="white"
+      borderBottomWidth={1}
+      borderColor="grey_light"
     >
       <TouchableOpacity
         style={{
@@ -51,18 +63,19 @@ const CustomHeader = (p: any) => {
         }}
         onPress={() => p.navigation.goBack()}
       >
-        <Icons.Feather name="chevron-left" size={32} color={theme.colors.grey_dark} />
+        <Icons.Feather name="chevron-left" size={24} color={theme.colors.grey_dark} />
       </TouchableOpacity>
-      <Text numberOfLines={1} variant={'h_4_medium'} marginHorizontal={'xs'}>
-        {p.options.title}
-      </Text>
-
-      <View style={{width: theme.spacing.xs * 2 + 24}}>
+      <Box flex={1}>
+        <Text numberOfLines={1} variant={'h_6_medium'} marginHorizontal={'xs'}>
+          {p.options.title}
+        </Text>
+      </Box>
+      <Box style={{width: theme.spacing.xs * 2 + 24}}>
         {
           // @ts-ignore
           p.options.headerRight && p.options.headerRight(null)
         }
-      </View>
-    </View>
+      </Box>
+    </Box>
   );
 };

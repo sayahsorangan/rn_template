@@ -35,10 +35,12 @@ const LoginScreen = () => {
 
   const loginMutation = AuthQueries.useSignIn({
     onSuccess: data => {
-      dispatch(user_action.setUser(data as any));
+      dispatch(user_action.setUser(data.user));
       dispatch(
         user_action.setAuth({
-          accessToken: data.token,
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken,
+          expiresIn: data.expiresIn,
         }),
       );
       Navigation.reset({name: 'tab'});
@@ -201,9 +203,9 @@ const LoginScreen = () => {
         <FadeInView delay={700} slideFrom="bottom" slideDistance={15}>
           <Box flexDirection="row" justifyContent="center" alignItems="center">
             <Text variant="body_regular" color="grey">
-              Don't have account ?{' '}
+              Don't have account ?{'  '}
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => Navigation.navigate('register')}>
               <Text variant="body_semibold" color="info">
                 Sign up
               </Text>

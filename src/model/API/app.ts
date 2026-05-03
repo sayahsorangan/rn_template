@@ -19,5 +19,7 @@ export interface ApiError {
 export namespace IApp {
   export interface IAuth {
     accessToken: string;
+    refreshToken?: string;
+    expiresIn?: number;
   }
 }

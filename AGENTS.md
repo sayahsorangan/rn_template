@@ -52,6 +52,7 @@ src/
 ├── i18n/                # i18next setup + locales/ (en.json, id.json)
 ├── lib/                 # 3rd-party library integrations
 │   ├── ky/              # HTTP client (base.ts, hooks.ts, index.ts)
+│   ├── llm/             # On-device LLM (index.ts, types.ts, hooks.ts, catalog.ts, downloader.ts)
 │   ├── react-query/     # Data fetching layer
 │   │   ├── {feature}/   # Feature folder: hooks.ts, keys.ts, service.ts, types.ts
 │   │   ├── custom-hooks.ts  # Generic useRQ/useMQ/useInfiniteRQ wrappers
@@ -62,7 +63,8 @@ src/
 │   │   ├── store.ts     # Store configuration
 │   │   ├── root-reducer.ts  # Combined reducers
 │   │   └── store-key.ts     # Slice key constants
-│   └── storage/         # MMKV storage adapters (redux-storage.ts, query-storage.ts)
+│   ├── storage/         # MMKV storage adapters (redux-storage.ts, query-storage.ts)
+│   └── rag/             # Offline RAG pipeline (types, chunker, embedder, vector-store, retriever, hooks, catalog)
 ├── model/               # TypeScript type definitions
 │   └── API/             # API response/request types (namespace-based)
 ├── router/              # Navigation config
@@ -74,6 +76,7 @@ src/
 │   └── linking.ts            # Deep link config
 ├── screens/             # Screen components (grouped by feature/)
 │   ├── auth/            # login-screen.tsx
+│   ├── chat/            # chat-screen.tsx + components/model-picker-sheet.tsx
 │   ├── home/            # main-home.tsx
 │   ├── splash-screen.tsx
 │   └── empty-screen.tsx
@@ -229,41 +232,51 @@ Use `Box` and `Text` primitives from `@app/themes`. **Never use raw `View`/`Text
 
 ```tsx
 import {Box} from '@app/themes';
-<Box padding="m" backgroundColor="white" borderRadius="m" />;
+<Box padding="md" backgroundColor="white" borderRadius="md" />;
 ```
 
 ### Text (replaces RN Text)
 
 ```tsx
 import {Text} from '@app/themes';
-<Text variant="body_medium" color="black" />;
+<Text variant="body_regular" color="black" />;
 ```
 
 ### Text Variants
 
-Format: `{fontSize}_{fontWeight}` — e.g. `h_1_bold`, `body_regular`, `button_l_semibold`
+Format: `{fontSize}_{fontWeight}`
+
+Font sizes: `h_1`(32) `h_2`(30) `h_3`(28) `h_4`(24) `h_5`(22) `h_6`(20) `body`(16) `body_leading`(20) `body_helper`(14) `button_s`(16) `button_m`(18) `button_l`(20)
+
+Font weights: `bold` `medium` `regular` `semibold`
+
+Examples: `h_1_bold`, `h_4_medium`, `body_regular`, `body_semibold`, `body_helper_regular`, `body_helper_semibold`, `button_l_semibold`
 
 ### Spacing Tokens
 
-`xxs`(4) `xs`(8) `s`(12) `sm`(14) `m`(16) `ml`(20) `l`(24) `xl`(32) `xxl`(48) `xxxl`(64) `huge`(128)
+`xxs`(4) `xs`(8) `sm`(12) `md`(16) `lg`(24) `xl`(40) `xxl`(64) `huge`(128)
 
 ### Color Tokens
 
-- Primary: `primary`, `primary_light`, `primary_dark`
-- Secondary: `secondary`, `secondary_light`, `secondary_dark`
-- Status: `success`, `danger`, `warning`, `info`
-- Neutrals: `white`, `black`, `grey`, `grey_2` through `grey_7`
-- Background: `bg_color`
+- Primary: `primary`, `primary_dark`, `primary_light`
+- Secondary: `secondary`, `secondary_dark`, `secondary_light`
+- Tertiary: `tertiary`, `tertiary_dark`, `tertiary_light`
+- Accent: `accent_1`, `accent_1_dark`, `accent_1_light`, `accent_2`, `accent_2_dark`, `accent_2_light`
+- Status: `success`, `success_dark`, `success_light`, `danger`, `danger_dark`, `danger_light`, `warning`, `warning_dark`, `warning_light`, `info`, `info_dark`, `info_light`
+- Neutrals: `black`, `white`, `grey`, `grey_dark`, `grey_light`
+- Background: `background`
 
 ### Border Radius Tokens
 
-`xxs`(4) `xs`(8) `s`(12) `sm`(14) `m`(16) `ml`(20) `l`(24) `xl`(32) `xxl`(48) `round`(100000)
+`xxs`(4) `xs`(8) `sm`(12) `md`(16) `lg`(24) `xl`(32) `xxl`(40) `round`(100000)
 
 ---
 
 ## Component Patterns
 
 ### Existing Reusable Components
+
+**Always use these components instead of raw RN primitives or custom re-implementations.**
 
 | Component       | Import                              | Key Props                                                                  |
 | --------------- | ----------------------------------- | -------------------------------------------------------------------------- |
@@ -279,6 +292,128 @@ Format: `{fontSize}_{fontWeight}` — e.g. `h_1_bold`, `body_regular`, `button_l
 | `Modal`         | `@components/modal`                 | `show`, `animationType`, `onDissmiss`                                      |
 | `Divider`       | `@components/divider`               | `horizontal`/`vertical` spacing                                            |
 | `ErrorBoundary` | `@components-atoms/error-boundary`  | Wraps app for crash protection                                             |
+| `FadeInView`    | `@components/animations`            | `delay`, `duration`, `slideFrom` (bottom/left/right/none), `slideDistance` |
+| `AppImage`      | `@components/app-image`             | Drop-in `<Image>` with automatic skeleton while loading                    |
+| `Skeleton`      | `@components/skeleton`              | `width`, `height`, `borderRadius` — animated shimmer placeholder           |
+| `IconButton`    | `@components/button/icon-button`    | `icon_name`, `label`, `onPress`, `loading`, `left_icon`, `center`          |
+| `CheckBox`      | `@components/button/check-box`      | `value: boolean`, `onPress(value: boolean)`                                |
+| `UnderDev`      | `@components/under-dev`             | Full-screen "Under Development" placeholder                                |
+
+### Component Usage Examples
+
+**Button** — never use `TouchableOpacity` for a primary/secondary action:
+
+```tsx
+import {Button} from '@components/button/Button';
+
+<Button label="Submit" onPress={handleSubmit} />
+<Button label="Cancel" onPress={handleCancel} secondary />
+<Button label="Loading..." onPress={handleSubmit} loading />
+```
+
+**TextInput** — never use raw `<TextInput>` from react-native for forms:
+
+```tsx
+import {TextInput} from '@components/inputs/text-input';
+
+<TextInput label="Email" placeholder="Enter email" iconLeftName="mail" />
+<TextInput label="Password" placeholder="Password" secureTextEntry iconRightName="eye" />
+```
+
+**DateInput** — never use a raw date picker directly:
+
+```tsx
+import {DateInput} from '@components/inputs/date-input';
+
+<DateInput type="date" label="Birth Date" value={date} onDateChange={setDate} />
+<DateInput type="time" label="Start Time" value={time} onDateChange={setTime} />
+```
+
+**DropdownInput** — never use a custom picker/select:
+
+```tsx
+import {DropdownInput} from '@components/inputs/dropdown-input';
+
+<DropdownInput
+  label="Category"
+  items={[
+    {label: 'A', value: 'a'},
+    {label: 'B', value: 'b'},
+  ]}
+  value={selected}
+  onChangeValue={setSelected}
+/>;
+```
+
+**SearchInput** — never build a custom search bar:
+
+```tsx
+import {SearchInput} from '@components/inputs/search-input';
+
+<SearchInput value={query} placeholder="Search..." onChangeText={setQuery} />;
+```
+
+**Modal** — never use RN's `<Modal>` directly:
+
+```tsx
+import {Modal} from '@components/modal';
+
+<Modal show={isVisible} onDissmiss={() => setVisible(false)} animationType="slide">
+  {/* content */}
+</Modal>;
+```
+
+**IconButton** — never use raw `TouchableOpacity` + icon manually:
+
+```tsx
+import {IconButton} from '@components/button/icon-button';
+
+<IconButton icon_name="arrow-left" onPress={Navigation.back} />
+<IconButton icon_name="send" label="Send" onPress={handleSend} left_icon />
+<IconButton icon_name="refresh-cw" onPress={handleRefresh} loading />
+```
+
+**CheckBox** — never use a custom checkbox implementation:
+
+```tsx
+import {CheckBox} from '@components/button/check-box';
+
+<CheckBox value={isChecked} onPress={setIsChecked} />;
+```
+
+**FadeInView** — never use raw `Animated.View` for enter animations:
+
+```tsx
+import {FadeInView} from '@components/animations';
+
+<FadeInView delay={100} duration={400} slideFrom="bottom">
+  <YourContent />
+</FadeInView>;
+```
+
+**AppImage** — never use raw `<Image>` from react-native for remote images:
+
+```tsx
+import {AppImage} from '@components/app-image';
+
+<AppImage source={{uri: imageUrl}} style={{width: 200, height: 150, borderRadius: 8}} />;
+```
+
+**Skeleton** — never build a custom shimmer placeholder:
+
+```tsx
+import {Skeleton} from '@components/skeleton';
+
+<Skeleton width="100%" height={120} borderRadius={8} />;
+```
+
+**UnderDev** — for screens not yet implemented:
+
+```tsx
+import {UnderDev} from '@components/under-dev';
+
+<UnderDev />;
+```
 
 ### Icons
 
@@ -335,6 +470,46 @@ Use the custom `persistReducer` wrapper from `@lib/storage/redux-storage` — it
 
 ## Screen Pattern
 
+Screens registered with `headerShown: false` (default) must use `<Header>` inside the screen. Screens registered with `headerShown: true` in the stack navigator use the `CustomHeader` from `stack-navigation.tsx` — **do NOT add `<Header>` inside those screens**. Pass `title` in the stack options and use `navigation.setOptions({ headerRight })` inside a `useLayoutEffect` for action buttons.
+
+**With navigator header (`headerShown: true`):**
+
+```tsx
+// src/router/stack-navigation.tsx
+<Stack.Screen name={Route.myScreen} component={MyScreen} options={{headerShown: true, title: 'My Screen'}} />
+```
+
+```tsx
+// src/screens/feature/my-screen.tsx
+import React, {useLayoutEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {Box} from '@app/themes';
+import {Container} from '@components/container';
+
+const MyScreen = () => {
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <MyActionButton />,
+    });
+  }, [navigation]);
+
+  return (
+    <Container>
+      {/* No <Header> here — navigator provides it */}
+      <Box flex={1} padding="md">
+        {/* content */}
+      </Box>
+    </Container>
+  );
+};
+
+export default MyScreen;
+```
+
+**With in-screen header (`headerShown: false`, default):**
+
 ```tsx
 // src/screens/{feature}/{screen-name}.tsx
 import React from 'react';
@@ -349,7 +524,7 @@ const FeatureScreen = () => {
   return (
     <Container>
       <Header title="Screen Title" />
-      <Box flex={1} padding="m">
+      <Box flex={1} padding="md">
         {/* Screen content using Box/Text primitives */}
       </Box>
     </Container>
@@ -358,6 +533,106 @@ const FeatureScreen = () => {
 
 export default FeatureScreen;
 ```
+
+---
+
+## Local LLM (Offline Inference)
+
+`llama.rn` runs GGUF models fully on-device via llama.cpp. Files live in `src/lib/llm/`.
+
+| File            | Purpose                                                                                   |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| `index.ts`      | `LlamaManager` singleton — holds the active LlamaContext                                  |
+| `types.ts`      | `ChatMessage`, `LoadModelOptions`, `GenerateOptions` types                                |
+| `hooks.ts`      | `useLoadModel()` and `useChat()` React hooks                                              |
+| `catalog.ts`    | `MODEL_CATALOG` — curated list of downloadable GGUF models                                |
+| `downloader.ts` | `startDownload`, `cancelDownload`, `deleteModel`, `scanLocalModels` via `react-native-fs` |
+
+```typescript
+import {useLoadModel, useChat} from '@lib/llm/hooks';
+
+// Load a model
+const {loadModel, unloadModel, isModelLoaded, progress} = useLoadModel();
+await loadModel({modelPath: '/path/to/model.gguf', nGpuLayers: -1, contextSize: 2048});
+
+// Chat
+const {messages, sendMessage, isGenerating} = useChat();
+await sendMessage('Hello!');
+```
+
+Model state is tracked in the `LlmReducer` Redux slice (`src/lib/redux/slice/llm/llm.ts`).
+`LlmReducer` also stores a `language` field (`'auto'` by default). Set it via `setLanguage` from `useChat()` to make the LLM always respond in a specific language (e.g. `'Indonesian'`, `'English'`). When `language === 'auto'` no instruction is injected.
+Models are downloaded from HuggingFace via `react-native-fs` and stored in the app's Documents directory.
+
+---
+
+## Offline RAG (Retrieval-Augmented Generation)
+
+Fully on-device RAG pipeline using `llama.rn` for embeddings + MMKV as the vector store. Files live in `src/lib/rag/`.
+
+| File              | Purpose                                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------------- |
+| `types.ts`        | `RagDocument`, `RagChunkMeta`, `RetrievedChunk`, options interfaces                                       |
+| `chunker.ts`      | `chunkText()` — overlap-aware text splitter with sentence-boundary breaks                                 |
+| `embedder.ts`     | `downloadAndLoadDefaultEmbedModel()`, `embed()`, `embedBatch()` — auto-download + dedicated embedding ctx |
+| `vector-store.ts` | MMKV-backed store for documents, chunk metadata, and embeddings                                           |
+| `retriever.ts`    | `retrieve()` cosine similarity search + `buildRagPrompt()` helper                                         |
+| `catalog.ts`      | `DEFAULT_EMBED_MODEL` — single fixed GGUF embedding model (nomic, ~92 MB)                                 |
+| `hooks.ts`        | `useEnsureEmbedModel()`, `useIngest()`, `useRag()`, `useRagDocuments()`                                   |
+| `index.ts`        | Re-exports all public API                                                                                 |
+
+RAG state (`isEmbedModelLoaded`, `embedModelPath`, `documentCount`, `embedDownloadStatus`, `embedDownloadProgress`) is in the `RagReducer` Redux slice.
+
+**Embedding model is fixed** — `nomic-embed-text-v1.5.Q4_K_M.gguf` (~92 MB). Auto-downloaded silently whenever the user downloads **any** chat model via `startDownload()`. If the user somehow uses RAG before downloading a chat model, `useIngest` and `useEnsureEmbedModel` fall back to downloading it inline. The user never selects or manages the embedding model — changing it would invalidate all stored chunks.
+
+### Flow
+
+```
+[Document / File]
+  → useIngest.ingestText / ingestFile
+  → auto-downloads embed model on first call (~92 MB, one-time)
+  → chunkText() — split into 512-char overlapping chunks
+  → embedBatch() — embed each chunk via llama.rn embedding model
+  → saveChunk() — persist meta + embedding to MMKV
+
+[Query]
+  → embed() — embed the query string
+  → retrieve() — cosine similarity against all stored chunks → top-K
+  → buildRagPrompt() — format context + question for the chat model
+  → sendMessage(prompt) — answer via chat LLM
+```
+
+### Usage
+
+```typescript
+import {useEnsureEmbedModel, useIngest, useRag} from '@lib/rag/hooks';
+
+// Optional: pre-warm the embed model (auto-downloads if missing)
+const {ensureLoaded, status, downloadProgress} = useEnsureEmbedModel();
+await ensureLoaded(); // status: 'downloading' → 'loading' → 'ready'
+
+// Ingest documents — embed model auto-downloads on first ingest if not pre-warmed
+const {ingestText, ingestFile, removeDocument, ingesting, ingestProgress} = useIngest();
+await ingestText('My Doc', 'Long document text...');
+await ingestFile('/path/to/file.txt');
+
+// Query
+const {buildPrompt, retrieveChunks, retrieving} = useRag();
+const prompt = await buildPrompt('What is the return policy?', {topK: 4});
+await sendMessage(prompt); // pass to useChat() from @lib/llm/hooks
+```
+
+### Embed Model Download Status
+
+`state.RagReducer.embedDownloadStatus` values:
+
+| Status          | Meaning                             |
+| --------------- | ----------------------------------- |
+| `'idle'`        | Not started                         |
+| `'downloading'` | Downloading model file (~92 MB)     |
+| `'loading'`     | llama.rn initialising context       |
+| `'ready'`       | Model loaded, ready to embed        |
+| `'error'`       | Failed — check `embedDownloadError` |
 
 ---
 
@@ -581,4 +856,20 @@ Switch with: `yarn env:dev`, `yarn env:stg`, `yarn env:prd`
 13. **Format dates with `moment`** — already installed
 14. **Use `KeyboardAwareScrollView`** for forms — already installed
 15. **Export screen components as default exports**
-16. **Alays Use Theme From Theme for color, spacing, border, font, and avoid using StyleSheet.Create**
+16. **Always use theme tokens for color, spacing, border, font** — avoid `StyleSheet.create`
+17. **Run `yarn lint --fix` after every code generation** to auto-fix lint and import ordering issues
+18. **Never use `<Header>` inside a screen registered with `headerShown: true`** — the `CustomHeader` in `stack-navigation.tsx` already renders the header. Use `navigation.setOptions({ headerRight })` inside `useLayoutEffect` for action buttons instead.
+19. **Always use base components from `@components/*`** — never re-implement or use raw RN primitives for UI that already has a wrapper:
+    - Buttons → `Button` from `@components/button/Button`
+    - Icon buttons → `IconButton` from `@components/button/icon-button`
+    - Checkboxes → `CheckBox` from `@components/button/check-box`
+    - Text fields → `TextInput` from `@components/inputs/text-input`
+    - Date/time picking → `DateInput` from `@components/inputs/date-input`
+    - Dropdowns/selects → `DropdownInput` from `@components/inputs/dropdown-input`
+    - Search bars → `SearchInput` from `@components/inputs/search-input`
+    - Modals → `Modal` from `@components/modal`
+    - Screen chrome → `Container` + `Header` from `@components/container` / `@components/header`
+    - Enter animations → `FadeInView` from `@components/animations`
+    - Remote images → `AppImage` from `@components/app-image`
+    - Loading placeholders → `Skeleton` from `@components/skeleton`
+    - Unimplemented screens → `UnderDev` from `@components/under-dev`

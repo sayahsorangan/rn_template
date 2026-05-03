@@ -63,6 +63,7 @@ src/
 ├── i18n/                # i18next setup + locales/ (en.json, id.json)
 ├── lib/                 # 3rd-party library integrations
 │   ├── ky/              # HTTP client (base.ts, hooks.ts, index.ts)
+│   ├── llm/             # On-device LLM (index.ts, types.ts, hooks.ts, catalog.ts, downloader.ts)
 │   ├── react-query/     # Data fetching layer
 │   │   ├── {feature}/   # Feature-scoped: hooks.ts, keys.ts, service.ts, types.ts
 │   │   ├── custom-hooks.ts  # Generic useRQ/useMQ/useInfiniteRQ wrappers
@@ -85,6 +86,7 @@ src/
 │   └── linking.ts            # Deep link config
 ├── screens/             # Screen components grouped by feature/
 │   ├── auth/            # login-screen.tsx
+│   ├── chat/            # chat-screen.tsx + components/model-picker-sheet.tsx
 │   ├── home/            # main-home.tsx
 │   ├── splash-screen.tsx
 │   └── empty-screen.tsx
@@ -108,6 +110,10 @@ src/
 | UI Toolkit       | @shopify/restyle 2                              |
 | Icons            | react-native-vector-icons (Feather)             |
 | i18n             | i18next 25 + react-i18next 15                   |
+| Date Picker      | @react-native-community/datetimepicker 9        |
+| On-device LLM    | llama.rn 0.12 (GGUF, llama.cpp)                 |
+| File System      | react-native-fs 2 (model downloads)             |
+| Markdown         | react-native-markdown-display 7                 |
 | Testing          | Jest 29 + @testing-library/react-native 13      |
 | Fonts            | Inter (Regular, Medium, SemiBold, Bold)         |
 | Debugging        | Reactotron + Redux Flipper                      |

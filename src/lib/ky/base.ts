@@ -11,7 +11,7 @@ const kyInstance = ky.create({
 });
 
 const base = kyInstance.extend({
-  baseUrl: API_HOST,
+  prefix: API_HOST,
   timeout: 6e4 * 4,
   hooks: {
     afterResponse: [authAfterResponseHooks],

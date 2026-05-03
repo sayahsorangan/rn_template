@@ -10,6 +10,8 @@ import {Icons} from '@app/assets/icons';
 import {TAB_HEIGHT} from '@app/constan/dimensions';
 import {useTheme} from '@app/themes';
 import {MainHomeScreen} from '@screens/home/main-home';
+import KnowledgeScreen from '@screens/knowledge/knowledge-screen';
+import ProfileScreen from '@screens/profile/profile-screen';
 
 import {IBottomTabScreen} from './route-name';
 
@@ -18,7 +20,7 @@ const Tab = createBottomTabNavigator<IBottomTabScreen>();
 
 const TAB_ICONS: Record<keyof IBottomTabScreen, string> = {
   home: 'home',
-  favorites: 'heart',
+  knowledge: 'book-open',
   profile: 'user',
 };
 
@@ -40,6 +42,8 @@ const renderBottomTab = (props: any) => <BottomTab {...props} />;
 export const BottomTabScreen = () => (
   <Tab.Navigator screenOptions={{headerShown: false}} tabBar={renderBottomTab}>
     <Tab.Screen name="home" component={MainHomeScreen} />
+    <Tab.Screen name="knowledge" component={KnowledgeScreen} />
+    <Tab.Screen name="profile" component={ProfileScreen} />
   </Tab.Navigator>
 );
 

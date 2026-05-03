@@ -1,10 +1,7 @@
-// Authentication Request Types
-export interface SignInRequest {
-  email: string;
-  password: string;
-}
+import {IUser} from '@models/API/user';
 
-// Authentication Response Types
-export interface SignInResponse {
-  token: string;
-}
+export type SignInRequest = IUser.LoginRequest;
+export type SignInResponse = IUser.LoginResponse;
+
+export type RegisterRequest = IUser.RegisterRequest;
+export type RegisterResponse = IUser.RegisterResponse;

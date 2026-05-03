@@ -2,13 +2,17 @@ import {useMQ, UseMQOptions} from '@react-query/custom-hooks';
 
 import {AuthQueryKey} from './keys';
 import {AuthServices} from './service';
-import {SignInRequest, SignInResponse} from './types';
+import {RegisterRequest, RegisterResponse, SignInRequest, SignInResponse} from './types';
 
-// Sign In Hook
 function useSignIn(options?: UseMQOptions<SignInResponse, SignInRequest>) {
-  return useMQ([AuthQueryKey.signIn], AuthServices.signIn, {retry: 0, ...options});
+  return useMQ([AuthQueryKey.signIn], AuthServices.signIn, options);
+}
+
+function useRegister(options?: UseMQOptions<RegisterResponse, RegisterRequest>) {
+  return useMQ([AuthQueryKey.register], AuthServices.register, options);
 }
 
 export const AuthQueries = {
   useSignIn,
+  useRegister,
 };

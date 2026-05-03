@@ -43,6 +43,7 @@ module.exports = {
     'react/jsx-handler-names': 0,
     'react/sort-comp': 0,
     'react/react-in-jsx-scope': 0,
+    'react/no-unstable-nested-components': ['error', {allowAsProps: true}],
     'react-hooks/exhaustive-deps': 'warn',
     // react-native
     'react-native/split-platform-components': 0,

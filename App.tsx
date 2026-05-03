@@ -1,6 +1,6 @@
 import '@i18n';
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {Platform, StatusBar, UIManager} from 'react-native';
 
@@ -10,29 +10,26 @@ import {useAppSelector} from '@app/hooks/redux';
 import {dark_theme, theme} from '@app/themes';
 import {AppProvider} from '@components-organisms/provider';
 import {ErrorBoundary} from '@components/atoms/error-boundary';
-import {Container} from '@components/container';
 import i18n from '@i18n';
+import {runMigrations} from '@lib/db/migrations';
 import {MainNavigator} from '@router/main-navigation';
-import SplashScreen from '@screens/splash-screen';
 import {ThemeProvider} from '@shopify/restyle';
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
   const themeMode = useAppSelector(state => state.AppReducer.themeMode);
   const language = useAppSelector(state => state.AppReducer.language);
 
   useEffect(() => {
+    runMigrations();
+  }, []);
+
+  useEffect(() => {
     moment.locale('en');
     if (Platform.OS === 'android') {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
+      UIManager.setLayoutAnimationEnabledExperimental?.(true);
     }
     StatusBar.setBarStyle(themeMode === 'dark' ? 'light-content' : 'dark-content');
-
-    const timeout = setTimeout(() => setLoading(false), 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
+  }, [themeMode]);
 
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -42,13 +39,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={activeTheme}>
-      {loading ? (
-        <Container translucent>
-          <SplashScreen />
-        </Container>
-      ) : (
-        <MainNavigator />
-      )}
+      <MainNavigator />
     </ThemeProvider>
   );
 };
